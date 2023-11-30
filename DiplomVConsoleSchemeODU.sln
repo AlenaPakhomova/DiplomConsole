@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomVConsoleSchemeODU", "DiplomVConsoleSchemeODU.csproj", "{BCBFA99E-B56E-43B2-BE40-32BA98D5293C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1B9B64F-5E0C-4753-A998-35C17F959E50} = {A1B9B64F-5E0C-4753-A998-35C17F959E50}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelODU", "..\ModelODU\ModelODU.csproj", "{A1B9B64F-5E0C-4753-A998-35C17F959E50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCBFA99E-B56E-43B2-BE40-32BA98D5293C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBFA99E-B56E-43B2-BE40-32BA98D5293C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBFA99E-B56E-43B2-BE40-32BA98D5293C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBFA99E-B56E-43B2-BE40-32BA98D5293C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B9B64F-5E0C-4753-A998-35C17F959E50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B9B64F-5E0C-4753-A998-35C17F959E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B9B64F-5E0C-4753-A998-35C17F959E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B9B64F-5E0C-4753-A998-35C17F959E50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01EAB3BB-7C19-4163-8CE5-B63C3B0B4D0C}
+	EndGlobalSection
+EndGlobal
