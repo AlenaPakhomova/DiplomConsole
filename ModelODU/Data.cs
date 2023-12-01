@@ -15,13 +15,13 @@ namespace ModelODU
 
         List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
         {
-            
+            /*
             new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204),
             new VoltageControlPoints("Беловская ГРЭС", 60602016),
             new VoltageControlPoints("ПС 500 кВ Юрга", 60690352),
             new VoltageControlPoints("ПС 500 кВ Барнаульская", 60102145),
             new VoltageControlPoints("ПС 500 кВ Новокузнецкая", 60690215),
-            
+            */
         };
 
 
