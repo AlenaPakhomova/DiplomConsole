@@ -11,7 +11,12 @@ namespace ModelODU
         /// <summary>
         /// Переменная для названия контрольного пункта
         /// </summary>
-        private string _name;
+        private string _nameOfControlPoints;
+
+        /// <summary>
+        /// Переменная для названия средства регулирования напряжения
+        /// </summary>
+        private string[] _nameOfVoltageRegulationMeans;
 
         /// <summary>
         /// Переменная для номера узла контрольного пункта в Rastr
@@ -21,7 +26,7 @@ namespace ModelODU
         /// <summary>
         /// Переменная для номера узла средства регулирования напряжения в Rastr
         /// </summary>
-        private int _numberOfVoltageRegulationMeans;
+        private int[] _numberOfVoltageRegulationMeans;
 
         /// <summary>
         /// Название контрольного пункта
@@ -30,11 +35,11 @@ namespace ModelODU
         {
             get
             {
-                return _name;
+                return _nameOfControlPoints;
             }
             set
             {
-                _name = value;
+                _nameOfControlPoints = value;
             }
         }
 
@@ -54,9 +59,24 @@ namespace ModelODU
         }
 
         /// <summary>
+        /// Название средства регулирования напряжения
+        /// </summary>
+        public string[] NameOfVoltageRegulationMeans
+        {
+            get
+            {
+                return _nameOfVoltageRegulationMeans;
+            }
+            set
+            {
+                _nameOfVoltageRegulationMeans = value;
+            }
+        }
+
+        /// <summary>
         /// Номер узла средства регулирования напряжения в Rastr
         /// </summary>
-        public int NumberOfVoltageRegulationMeans
+        public int[] NumberOfVoltageRegulationMeans
         {
             get
             {
@@ -74,10 +94,11 @@ namespace ModelODU
         /// <param name="name"></param>
         /// <param name="numberOfControlPoints"></param>
         /// <param name="numberOfVoltageRegulationMeans"></param>
-        public VoltageControlPoints(string name, int numberOfControlPoints, int numberOfVoltageRegulationMeans)
+        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, string[] nameOfVoltageRegulationMeans, int[] numberOfVoltageRegulationMeans)
         {
-            _name = name;
+            _nameOfControlPoints = nameOfControlPoints;
             _numberOfControlPoints = numberOfControlPoints;
+            _nameOfVoltageRegulationMeans = nameOfVoltageRegulationMeans;
             _numberOfVoltageRegulationMeans = numberOfVoltageRegulationMeans;
         }   
     }
