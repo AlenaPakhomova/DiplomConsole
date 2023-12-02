@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ModelODU
 {
+    /// <summary>
+    /// Класс для задания параметров контрольного пункта
+    /// </summary>
     public class VoltageControlPoints
     {
         /// <summary>

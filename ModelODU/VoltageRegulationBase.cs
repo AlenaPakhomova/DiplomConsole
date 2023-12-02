@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ModelODU
 {
     /// <summary>
-    /// Класс для обращения к средствам регулирования напряжения
+    /// Класс для обращения к классам для расчёта эффективности СРН 
     /// </summary>
     public abstract class VoltageRegulationBase
     {
