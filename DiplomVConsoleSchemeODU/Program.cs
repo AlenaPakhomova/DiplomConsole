@@ -25,17 +25,81 @@ namespace DiplomVConsoleSmallScheme
             while (true)
             {
                 Console.WriteLine("");
-                Console.WriteLine("Выберите действие:");
-                Console.WriteLine("1 - Управляемый реактор");
-                Console.WriteLine("2 - Шунтирующий реактор");
-                Console.WriteLine("3 - Генератор");
-                Console.WriteLine("4 - Выход из программы");
+                Console.WriteLine("Выберите Контрольный пункт:");
+                Console.WriteLine("1 - ПС 500 кВ Ново-Анжерская");
+                Console.WriteLine("2 - Беловская ГРЭС");
+                Console.WriteLine("3 - ПС 500 кВ Юрга");
+                Console.WriteLine("4 - ПС 500 кВ Барнаульская");
+                Console.WriteLine("5 - ПС 500 кВ Новокузнецкая");
+                Console.WriteLine("6 - Выход из программы");
                 var consoleKey = Console.ReadLine();
                 switch (consoleKey)
                 {
                     case "1":
                         {
-                            List<double> listNew = new List<double>();
+                            Console.WriteLine("В качестве контрольного пункта вы выбрали " +
+                                "ПС 500 кВ Ново-Анжерская.Нажмте любую кнопку, чтобы перейти " +
+                                "к выбору Средства регулирования напряжения для расчёта " +
+                                "эффективности");
+                            Console.ReadKey();
+                            Console.WriteLine("Выберите СРН");
+                            Console.WriteLine($"1 - УШР-500 ПС 500 кВ Томская");
+                            Console.WriteLine("2 - ШР-500 ПС 500 кВ Томская");
+                            Console.WriteLine("3 - Беловская ГРЭС");
+                            Console.WriteLine("4 - Хочу выбрать другой контрольный пункт");
+                            var consoleKey1 = Console.ReadLine();
+                            switch (consoleKey1)
+                            {
+                                case "1":
+                                    {
+                                        Console.WriteLine("УШР-500 ПС 500 кВ Томская");
+                                        ControlledReactors controlledReactors = new ControlledReactors();
+                                        RastrСalculation rastr = new RastrСalculation();
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+                                        rastr.Regime();
+                                        rastr.SetFix();
+                                        rastr.Regime();
+                                        Console.WriteLine("Параметры до изменения");
+
+                                       // controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
+                                       // controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
+                                        
+                                        rastr.SetValueQ();
+                                        rastr.Regime();
+
+                                        Console.WriteLine("Параметры после изменения");
+                                        controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[0];
+                                        controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
+
+                                        controlledReactors.Effect();
+
+                                        Console.WriteLine("Параметры до изменения");
+
+
+                                        break;
+                                    }
+                               /* case "2":
+                                    {
+                                        Console.WriteLine("ШР-500 ПС 500 кВ Томская");
+                                        break;
+                                    }*/
+                                case "3":
+                                    {
+                                        Console.WriteLine("Беловская ГРЭС");
+                                        break;
+                                    }
+                                case "4":
+                                    {                                       
+                                        break;
+                                    }
+
+                            }    
+
+
+                           //Складываем значения эффективности 
+                           List<double> listNew = new List<double>();
+
+                            /*
                             ControlledReactors controlledReactors = new ControlledReactors();
                             RastrСalculation rastr = new RastrСalculation();
                             List<int> listCount = new List<int>() {0, 1, 2 };
@@ -60,11 +124,12 @@ namespace DiplomVConsoleSmallScheme
                             {
                                 Console.WriteLine($"Значение эффективности: {Math.Abs(item)}");
                             }
-
+                            */
                             break;
                         }
                     case "2":
                         {
+                            
                             List<double> listNew = new List<double>();
                             SwitchedReactors switchedReactors = new SwitchedReactors();
                             RastrСalculation rastr = new RastrСalculation();
@@ -124,6 +189,17 @@ namespace DiplomVConsoleSmallScheme
                             break;
                         }
                     case "4":
+                        {
+
+                            Console.WriteLine($"Значение эффективности:");
+                            break;
+                        }
+                    case "5":
+                        {
+                            Console.WriteLine($"Значение эффективности:");
+                            break;
+                        }
+                    case "6":
                         {
                             Environment.Exit(0);
                             break;

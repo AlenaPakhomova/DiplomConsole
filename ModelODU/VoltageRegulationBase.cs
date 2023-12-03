@@ -58,11 +58,6 @@ namespace ModelODU
             }
         }
 
-        public VoltageRegulationBase()
-        {
-
-        }
-
         /// <summary>
         /// Проверка на отрицательные числа
         /// </summary>

@@ -17,19 +17,14 @@ namespace ModelODU
         private string _nameOfControlPoints;
 
         /// <summary>
-        /// Переменная для названия средства регулирования напряжения
-        /// </summary>
-        private string[] _nameOfVoltageRegulationMeans;
-
-        /// <summary>
         /// Переменная для номера узла контрольного пункта в Rastr
         /// </summary>
         private int _numberOfControlPoints;
 
         /// <summary>
-        /// Переменная для номера узла средства регулирования напряжения в Rastr
+        /// Переменная для названия средства регулирования напряжения
         /// </summary>
-        private int[] _numberOfVoltageRegulationMeans;
+        private List<VoltageRegulationMeans> _parametersOfVoltageRegulationMeans;
 
         /// <summary>
         /// Название контрольного пункта
@@ -64,32 +59,19 @@ namespace ModelODU
         /// <summary>
         /// Название средства регулирования напряжения
         /// </summary>
-        public string[] NameOfVoltageRegulationMeans
+        public List<VoltageRegulationMeans> ParametersOfVoltageRegulationMeans
         {
             get
             {
-                return _nameOfVoltageRegulationMeans;
+                return _parametersOfVoltageRegulationMeans;
             }
             set
             {
-                _nameOfVoltageRegulationMeans = value;
+                _parametersOfVoltageRegulationMeans = value;
             }
         }
 
-        /// <summary>
-        /// Номер узла средства регулирования напряжения в Rastr
-        /// </summary>
-        public int[] NumberOfVoltageRegulationMeans
-        {
-            get
-            {
-                return _numberOfVoltageRegulationMeans;
-            }
-            set
-            {
-                _numberOfVoltageRegulationMeans = value;
-            }
-        }
+        
 
         /// <summary>
         /// Констурктор
@@ -97,12 +79,16 @@ namespace ModelODU
         /// <param name="name"></param>
         /// <param name="numberOfControlPoints"></param>
         /// <param name="numberOfVoltageRegulationMeans"></param>
-        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, string[] nameOfVoltageRegulationMeans, int[] numberOfVoltageRegulationMeans)
+        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints,
+            List<VoltageRegulationMeans> parametersOfVoltageRegulationMeans, List<VoltageRegulationMeans> _nameOfVoltageRegulationMeans,
+            List<VoltageRegulationMeans> _typeOfVoltageRegulationMeans, List<VoltageRegulationMeans> _numberOfVoltageRegulationMeans)
         {
-            _nameOfControlPoints = nameOfControlPoints;
-            _numberOfControlPoints = numberOfControlPoints;
-            _nameOfVoltageRegulationMeans = nameOfVoltageRegulationMeans;
-            _numberOfVoltageRegulationMeans = numberOfVoltageRegulationMeans;
+            VoltageRegulationMeans voltageRegulationMeans = new VoltageRegulationMeans();
+            NameOfControlPoints = nameOfControlPoints;
+            NumberOfControlPoints = numberOfControlPoints;
+            ParametersOfVoltageRegulationMeans.Add(voltageRegulationMeans);
+
+
         }   
     }
 }

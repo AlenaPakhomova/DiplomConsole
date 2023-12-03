@@ -14,22 +14,22 @@ namespace ModelODU
         /// <summary>
         /// Переменная для названия средства регулирования напряжения 
         /// </summary>
-        private string _nameOfVoltageRegulationMeans;
+        private List<string> _nameOfVoltageRegulationMeans;
 
         /// <summary>
         /// Переменная для типа средства регулирования напряжения
         /// </summary>
-        private string _typeOfVoltageRegulationMeans;
+        private List<string> _typeOfVoltageRegulationMeans;
 
         /// <summary>
         /// Переменная для номера контрольного пункта в Rastr
         /// </summary>
-        private int _numberOfVoltageRegulationMeans;
+        private List<int> _numberOfVoltageRegulationMeans;
 
         /// <summary>
         /// Название средства регулирования напряжения
         /// </summary>
-        public string NameOfVoltageRegulationMeans
+        public List<string> NameOfVoltageRegulationMeans
         {
             get
             {
@@ -44,7 +44,7 @@ namespace ModelODU
         /// <summary>
         /// Тип средства регулирования напряжения
         /// </summary>
-        public string TypeOfVoltageRegulationMeans
+        public List<string> TypeOfVoltageRegulationMeans
         {
             get
             {
@@ -54,6 +54,29 @@ namespace ModelODU
             {
                 _typeOfVoltageRegulationMeans = value;
             }
+        }
+
+        /// <summary>
+        /// Номер контрольного пукта из Rastr
+        /// </summary>
+        public List<int> NumberOfVoltageRegulationMeans
+        {
+            get
+            {
+                return _numberOfVoltageRegulationMeans;
+            }
+            set
+            {
+                _numberOfVoltageRegulationMeans = value;
+            }
+        }
+
+        public VoltageRegulationMeans(List<string> _nameOfVoltageRegulationMeans, 
+            List<string> _typeOfVoltageRegulationMeans, List<int> _numberOfVoltageRegulationMeans)
+        {
+            NameOfVoltageRegulationMeans = _nameOfVoltageRegulationMeans;
+            TypeOfVoltageRegulationMeans = _typeOfVoltageRegulationMeans;
+            NumberOfVoltageRegulationMeans = _numberOfVoltageRegulationMeans;
         }
 
     }
