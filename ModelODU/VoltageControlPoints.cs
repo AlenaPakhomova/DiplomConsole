@@ -63,10 +63,11 @@ namespace ModelODU
         {
             get
             {
+
                 return _parametersOfVoltageRegulationMeans;
             }
             set
-            {
+            {             
                 _parametersOfVoltageRegulationMeans = value;
             }
         }
@@ -79,14 +80,13 @@ namespace ModelODU
         /// <param name="name"></param>
         /// <param name="numberOfControlPoints"></param>
         /// <param name="numberOfVoltageRegulationMeans"></param>
-        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints,
-            List<VoltageRegulationMeans> parametersOfVoltageRegulationMeans, List<VoltageRegulationMeans> _nameOfVoltageRegulationMeans,
-            List<VoltageRegulationMeans> _typeOfVoltageRegulationMeans, List<VoltageRegulationMeans> _numberOfVoltageRegulationMeans)
+        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, VoltageRegulationMeans value)
         {
-            VoltageRegulationMeans voltageRegulationMeans = new VoltageRegulationMeans();
+           // VoltageRegulationMeans voltageRegulationMeans = new VoltageRegulationMeans();
             NameOfControlPoints = nameOfControlPoints;
             NumberOfControlPoints = numberOfControlPoints;
-            ParametersOfVoltageRegulationMeans.Add(voltageRegulationMeans);
+            ParametersOfVoltageRegulationMeans.Add(value);  
+
 
 
         }   
