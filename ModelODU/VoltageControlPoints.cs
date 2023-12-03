@@ -25,6 +25,7 @@ namespace ModelODU
         /// Переменная для названия средства регулирования напряжения
         /// </summary>
         private List<VoltageRegulationMeans> _parametersOfVoltageRegulationMeans;
+        
 
         /// <summary>
         /// Название контрольного пункта
@@ -82,13 +83,11 @@ namespace ModelODU
         /// <param name="numberOfVoltageRegulationMeans"></param>
         public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, VoltageRegulationMeans value)
         {
-           // VoltageRegulationMeans voltageRegulationMeans = new VoltageRegulationMeans();
             NameOfControlPoints = nameOfControlPoints;
             NumberOfControlPoints = numberOfControlPoints;
             ParametersOfVoltageRegulationMeans.Add(value);  
+        }
 
-
-
-        }   
+        
     }
 }

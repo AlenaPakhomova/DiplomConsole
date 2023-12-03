@@ -1,6 +1,7 @@
 ﻿using ModelODU.VoltageRegulation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,20 @@ namespace ModelODU
     public class Data
     {
 
-        List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
+        public static List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
         {
-            
-            new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204,
-                new VoltageRegulationMeans( "УШР-500 ПС 500 кВ Томская", "управляемые",  60690204 )),
-            
+
+           
 
         };
+
+
+
+       
+
+
+
+
 
 
 

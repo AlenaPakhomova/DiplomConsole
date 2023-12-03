@@ -14,22 +14,22 @@ namespace ModelODU
         /// <summary>
         /// Переменная для названия средства регулирования напряжения 
         /// </summary>
-        private string _nameOfVoltageRegulationMeans;
+        private List<string> _nameOfVoltageRegulationMeans;
 
         /// <summary>
         /// Переменная для типа средства регулирования напряжения
         /// </summary>
-        private string _typeOfVoltageRegulationMeans;
+        private List<string> _typeOfVoltageRegulationMeans;
 
         /// <summary>
         /// Переменная для номера контрольного пункта в Rastr
         /// </summary>
-        private int _numberOfVoltageRegulationMeans;
+        private List<int> _numberOfVoltageRegulationMeans;
 
         /// <summary>
         /// Название средства регулирования напряжения
         /// </summary>
-        public string NameOfVoltageRegulationMeans
+        public List<string> NameOfVoltageRegulationMeans
         {
             get
             {
@@ -44,7 +44,7 @@ namespace ModelODU
         /// <summary>
         /// Тип средства регулирования напряжения
         /// </summary>
-        public string TypeOfVoltageRegulationMeans
+        public List<string> TypeOfVoltageRegulationMeans
         {
             get
             {
@@ -59,7 +59,7 @@ namespace ModelODU
         /// <summary>
         /// Номер контрольного пукта из Rastr
         /// </summary>
-        public int NumberOfVoltageRegulationMeans
+        public List<int> NumberOfVoltageRegulationMeans
         {
             get
             {
@@ -72,8 +72,8 @@ namespace ModelODU
         }
 
         
-        public VoltageRegulationMeans(string _nameOfVoltageRegulationMeans, 
-            string _typeOfVoltageRegulationMeans, int _numberOfVoltageRegulationMeans)
+        public VoltageRegulationMeans(List<string> _nameOfVoltageRegulationMeans,
+            List<string> _typeOfVoltageRegulationMeans, List<int> _numberOfVoltageRegulationMeans)
         {
             NameOfVoltageRegulationMeans = _nameOfVoltageRegulationMeans;
             TypeOfVoltageRegulationMeans = _typeOfVoltageRegulationMeans;
