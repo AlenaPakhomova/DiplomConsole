@@ -14,17 +14,37 @@ namespace ModelODU
     public class Data
     {
 
-        public static List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
+        private static List<VoltageRegulationMeans> meansOfSubstationNovoAngerskaya = new List<VoltageRegulationMeans>()
         {
-
-           
-
+            new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
+            new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
+            new VoltageRegulationMeans("ШР-500 ПС 500 кВ Томская", "коммутируемый", 60901161),
+            new VoltageRegulationMeans("Р-532 ПС 500 кВ Заря", "коммутируемый", 60700130),
         };
 
+        private static List<VoltageRegulationMeans> meansOfBelovskayaGRES = new List<VoltageRegulationMeans>()
+        {
+            new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
+            new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
+            new VoltageRegulationMeans("ШР-500 ПС 500 кВ Томская", "коммутируемый", 60901161),
+            new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
+        };
+
+        private static List<VoltageRegulationMeans> meansOfSubstationJurga = new List<VoltageRegulationMeans>()
+        {
+            new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
+            new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
+            new VoltageRegulationMeans("ШР-500 ПС 500 кВ Томская", "коммутируемый", 60901161),
+            new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
+        };
+
+        private static List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
+        {          
+            new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204, meansOfSubstationNovoAngerskaya),
 
 
-       
 
+        };
 
 
 

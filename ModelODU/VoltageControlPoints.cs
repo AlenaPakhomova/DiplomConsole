@@ -81,11 +81,11 @@ namespace ModelODU
         /// <param name="name"></param>
         /// <param name="numberOfControlPoints"></param>
         /// <param name="numberOfVoltageRegulationMeans"></param>
-        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, VoltageRegulationMeans value)
+        public VoltageControlPoints(string nameOfControlPoints, int numberOfControlPoints, List<VoltageRegulationMeans> listOfMeans)
         {
             NameOfControlPoints = nameOfControlPoints;
             NumberOfControlPoints = numberOfControlPoints;
-            ParametersOfVoltageRegulationMeans.Add(value);  
+            ParametersOfVoltageRegulationMeans = listOfMeans;
         }
 
         
