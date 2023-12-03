@@ -1,6 +1,7 @@
 ﻿using ASTRALib;
 using ModelODU;
 using ModelODU.VoltageRegulation;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DiplomVConsoleSmallScheme
 {
@@ -53,27 +54,30 @@ namespace DiplomVConsoleSmallScheme
                                 case "1":
                                     {
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
+                                        Data data = new Data();
                                         ControlledReactors controlledReactors = new ControlledReactors();
                                         RastrСalculation rastr = new RastrСalculation();
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
-                                        rastr.SetFix();
-                                        rastr.Regime();
+                                       // rastr.SetFix();
+                                       // rastr.Regime();
                                         Console.WriteLine("Параметры до изменения");
 
-                                       // controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
-                                       // controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
-                                        
-                                        rastr.SetValueQ();
-                                        rastr.Regime();
+                                        //controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
+                                        controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
 
-                                        Console.WriteLine("Параметры после изменения");
-                                        controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[0];
-                                        controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
+                                        Console.WriteLine(controlledReactors.VoltageFirst);
 
-                                        controlledReactors.Effect();
+                                        //rastr.SetValueQ();
+                                        // rastr.Regime();
 
-                                        Console.WriteLine("Параметры до изменения");
+                                        // Console.WriteLine("Параметры после изменения");
+                                        //controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[0];
+                                        // controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
+
+                                        //controlledReactors.Effect();
+
+                                        // Console.WriteLine("Параметры до изменения");
 
 
                                         break;
@@ -129,7 +133,7 @@ namespace DiplomVConsoleSmallScheme
                         }
                     case "2":
                         {
-                            
+                            /*
                             List<double> listNew = new List<double>();
                             SwitchedReactors switchedReactors = new SwitchedReactors();
                             RastrСalculation rastr = new RastrСalculation();
@@ -155,11 +159,12 @@ namespace DiplomVConsoleSmallScheme
                             {
                                 Console.WriteLine($"Значение эффективности: {Math.Abs(item)}");
                             }
-
+                            */
                             break;
                         }
                     case "3":
                         {
+                            /*
                             List<double> listNew = new List<double>();
                             Generators generators = new Generators();
                             RastrСalculation rastr = new RastrСalculation();
@@ -185,7 +190,7 @@ namespace DiplomVConsoleSmallScheme
                             {
                                 Console.WriteLine($"Значение эффективности: {Math.Abs(item)}");
                             }
-
+                            */
                             break;
                         }
                     case "4":

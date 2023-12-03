@@ -58,14 +58,19 @@ namespace ModelODU
             }
         }
 
+        /*
         /// <summary>
         /// Получение реактивной мощности реактора до изменений из Rastr
         /// </summary>
         /// <returns></returns>
         public List<double> GetReactivePowerFirst()
         {
+            
             Data data = new Data();
-            List<int> list = data.NumbersOfControlledReactors;
+            List<VoltageControlPoints> list = data.VoltageControlPoints;
+            List<VoltageControlPoints> subList = data.
+            data.VoltageControlPoints.
+
             List<double> listNew = new List<double>();
             int index = 0;
             ITable Node = (ITable)_rastr.Tables.Item("node");
@@ -81,7 +86,9 @@ namespace ModelODU
                 listNew.Add(Convert.ToDouble(powerReacGen.Z[n]));
             }
             return listNew; 
+            
         }
+        */
 
         /// <summary>
         ///  Запись значений в ячейку с реактивной мощностью на реакторе в Rastr
@@ -138,15 +145,18 @@ namespace ModelODU
         public List<double> GetVoltageYFirst()
         {
             Data data = new Data();
-            List<int> list = data.NumbersOfNodes;
-            List<double> listNew = new List<double>(); 
+            List<VoltageControlPoints> list = data.VoltageControlPoints;
+            List<VoltageControlPoints> subList = list.Where((L) => L.NumberOfControlPoints == 0).ToList();
+
+            //subList.ForEach((t) => Console.WriteLine(t.ToString()));           
+            List<double> listNew = new List<double>();            
 
             ITable Node = (ITable)_rastr.Tables.Item("node");
             ICol voltageRas = (ICol)Node.Cols.Item("vras");
             ICol NumberNode = (ICol)Node.Cols.Item("ny");
             ICol name = (ICol)Node.Cols.Item("name");
 
-            foreach (var item in list)
+            foreach (var item in subList)
             {
                 Node.SetSel($"ny = {item}");
                 int n = Node.FindNextSel[-1];

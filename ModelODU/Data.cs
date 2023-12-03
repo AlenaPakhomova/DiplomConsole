@@ -14,7 +14,7 @@ namespace ModelODU
     public class Data
     {
 
-        private static List<VoltageRegulationMeans> meansOfSubstationNovoAngerskaya = new List<VoltageRegulationMeans>()
+        private static List<VoltageRegulationMeans> MeansOfSubstationNovoAngerskaya = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
             new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
@@ -22,7 +22,7 @@ namespace ModelODU
             new VoltageRegulationMeans("Р-532 ПС 500 кВ Заря", "коммутируемый", 60700130),
         };
 
-        private static List<VoltageRegulationMeans> meansOfBelovskayaGRES = new List<VoltageRegulationMeans>()
+        private static List<VoltageRegulationMeans> MeansOfBelovskayaGRES = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
             new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
@@ -30,7 +30,7 @@ namespace ModelODU
             new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
         };
 
-        private static List<VoltageRegulationMeans> meansOfSubstationJurga = new List<VoltageRegulationMeans>()
+        private static List<VoltageRegulationMeans> MeansOfSubstationJurga = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
             new VoltageRegulationMeans("СТК-1 ПС 500 кВ Заря", "управляемый", 60700638),
@@ -38,12 +38,11 @@ namespace ModelODU
             new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
         };
 
-        public List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
+        public List<VoltageControlPoints> VoltageControlPoints = new List<VoltageControlPoints>()
         {          
-            new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204, meansOfSubstationNovoAngerskaya),
-            new VoltageControlPoints("Беловская ГРЭС", 60602016, meansOfBelovskayaGRES),
-            new VoltageControlPoints("ПС 500 кВ Юрга", 60690352, meansOfSubstationJurga)
-
+            new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204, MeansOfSubstationNovoAngerskaya),
+            new VoltageControlPoints("Беловская ГРЭС", 60602016, MeansOfBelovskayaGRES),
+            new VoltageControlPoints("ПС 500 кВ Юрга", 60690352, MeansOfSubstationJurga)
         };
 
 
