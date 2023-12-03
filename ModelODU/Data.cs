@@ -38,11 +38,11 @@ namespace ModelODU
             new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
         };
 
-        private static List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
+        public List<VoltageControlPoints> voltageControlPoints = new List<VoltageControlPoints>()
         {          
             new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204, meansOfSubstationNovoAngerskaya),
-
-
+            new VoltageControlPoints("Беловская ГРЭС", 60602016, meansOfBelovskayaGRES),
+            new VoltageControlPoints("ПС 500 кВ Юрга", 60690352, meansOfSubstationJurga)
 
         };
 
