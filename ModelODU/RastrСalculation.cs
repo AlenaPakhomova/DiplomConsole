@@ -58,38 +58,48 @@ namespace ModelODU
             }
         }
 
-        /*
+        
         /// <summary>
         /// Получение реактивной мощности реактора до изменений из Rastr
         /// </summary>
         /// <returns></returns>
         public List<double> GetReactivePowerFirst()
         {
-            
             Data data = new Data();
             List<VoltageControlPoints> list = data.VoltageControlPoints;
-            List<VoltageControlPoints> subList = data.
-            data.VoltageControlPoints.
+            List<VoltageRegulationMeans> voltage = new List<VoltageRegulationMeans>();
+            List<VoltageControlPoints> subList = list.Where((L) => L.ParametersOfVoltageRegulationMeans == voltage).ToList();
+            voltage.GetRange(0, subList.Count);                    
 
             List<double> listNew = new List<double>();
-            int index = 0;
-            ITable Node = (ITable)_rastr.Tables.Item("node");
-            ICol powerReacGen = (ICol)Node.Cols.Item("qg");
-            ICol NumberNode = (ICol)Node.Cols.Item("ny");
-            ICol name = (ICol)Node.Cols.Item("name");
-            
-            foreach (var item in list)
+    
+            List<int> listCount = new List<int>() { 0, 1, 2 };
+            foreach (var item in listCount)
             {
-                Node.SetSel($"ny = {item}");
-                int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
-                listNew.Add(Convert.ToDouble(powerReacGen.Z[n]));
-            }
-            return listNew; 
-            
-        }
-        */
+                List<VoltageControlPoints> subList1 = list.Where((L) =>
+                L.ParametersOfVoltageRegulationMeans[item].TypeOfVoltageRegulationMeans == "управляемый").ToList();
 
+                ITable Node = (ITable)_rastr.Tables.Item("node");
+                ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+                ICol NumberNode = (ICol)Node.Cols.Item("ny");
+                ICol name = (ICol)Node.Cols.Item("name");
+
+
+                foreach (var item in list)
+                {
+                    Node.SetSel($"ny = {item}");
+                    int n = Node.FindNextSel[-1];
+                    Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+                    listNew.Add(Convert.ToDouble(powerReacGen.Z[n]));
+                }
+
+            }
+            return listNew;
+          
+        }
+        
+
+        /*
         /// <summary>
         ///  Запись значений в ячейку с реактивной мощностью на реакторе в Rastr
         /// </summary>
@@ -112,7 +122,9 @@ namespace ModelODU
                 powerReacGen.set_ZN(n, Q);
             }
         }
+        */
 
+        /*
         /// <summary>
         /// Получение реактивной мощности на реакторе из Rastr после изменений
         /// </summary>
@@ -137,35 +149,39 @@ namespace ModelODU
             }
             return listNew;
         }
+        */
 
         /// <summary>
-        /// Получение напряжения в КП до изменений из Rastr
+        /// Получение напряжения в КП до изменений из Rastr 
         /// </summary>
         /// <returns></returns>
         public List<double> GetVoltageYFirst()
         {
             Data data = new Data();
-            List<VoltageControlPoints> list = data.VoltageControlPoints;
-            List<VoltageControlPoints> subList = list.Where((L) => L.NumberOfControlPoints == 0).ToList();
-
-            //subList.ForEach((t) => Console.WriteLine(t.ToString()));           
-            List<double> listNew = new List<double>();            
+            List<VoltageControlPoints> listU1 = data.VoltageControlPoints;
+            List<double> listNewU1 = new List<double>();
+            List<VoltageControlPoints> subListU1 = listU1.Where((U1) => U1.NumberOfControlPoints > 0).ToList();
 
             ITable Node = (ITable)_rastr.Tables.Item("node");
             ICol voltageRas = (ICol)Node.Cols.Item("vras");
             ICol NumberNode = (ICol)Node.Cols.Item("ny");
             ICol name = (ICol)Node.Cols.Item("name");
 
-            foreach (var item in subList)
+            foreach (var item in subListU1)
             {
-                Node.SetSel($"ny = {item}");
+                Node.SetSel($"ny = {item.NumberOfControlPoints}");
                 int n = Node.FindNextSel[-1];
                 Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
-                listNew.Add(Convert.ToDouble(voltageRas.Z[n]));
+                listNewU1.Add(Convert.ToDouble(voltageRas.Z[n]));
+
             }
-            return listNew;
+            return listNewU1;
+
         }
 
+
+
+        /*
         /// <summary>
         /// Получение напряжения в КП из Rastr после изменений
         /// </summary>
@@ -190,6 +206,7 @@ namespace ModelODU
             }
             return listNew;
         }
+        */
 
         /// <summary>
         /// Расчёт режима
@@ -199,6 +216,7 @@ namespace ModelODU
             _rastr.rgm("");
         }
 
+        /*
         /// <summary>
         /// Получение начального состояния шунтирующего реактора из Rastr 
         /// </summary>
@@ -223,6 +241,7 @@ namespace ModelODU
             }
             return listNew;
         }
+
 
         /// <summary>
         /// Запись нового состояния шунтирующего реактора в Rastr 
@@ -278,7 +297,9 @@ namespace ModelODU
             }
             return listNew;
         }
+        */
 
+        /*
         /// <summary>
         /// Получение активной и реактивной мощности генератора до изменений из Rastr
         /// </summary>
@@ -357,5 +378,7 @@ namespace ModelODU
             }
             return listNew;
         }
+        */
+
     }
 }
