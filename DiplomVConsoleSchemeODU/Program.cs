@@ -56,60 +56,64 @@ namespace DiplomVConsoleSmallScheme
                                 case "1":
                                     {
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
-
-                                        /*
-                                        Data data = new Data();
-                                        List<VoltageControlPoints> list1 = data.VoltageControlPoints;
-                                        List<double> listNew1 = new List<double>();
-
-                                        List<VoltageControlPoints> subList = list1.Where((L) =>
-                                        L.ParametersOfVoltageRegulationMeans[0].TypeOfVoltageRegulationMeans 
-                                        == "управляемый").ToList();
-
-                                        foreach (var item in subList)
-                                        {
-                                            Console.WriteLine(item.ParametersOfVoltageRegulationMeans[0].NumberOfVoltageRegulationMeans);
-                                            Console.WriteLine(item.ParametersOfVoltageRegulationMeans[0].NameOfVoltageRegulationMeans);
-                                            Console.WriteLine(item.ParametersOfVoltageRegulationMeans[0].TypeOfVoltageRegulationMeans);
-                                        }
-
-                                        */
-                                        
+         
                                         ControlledReactors controlledReactors = new ControlledReactors();
                                         RastrСalculation rastr = new RastrСalculation();
                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
-                                        // rastr.SetFix();
-                                        // rastr.Regime();
+                                        rastr.SetFix();
+                                        rastr.Regime();
                                         Console.WriteLine("Параметры до изменения");
-
-                                        //controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
+                                        controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
                                         controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
 
                                         Console.WriteLine(controlledReactors.VoltageFirst);
-                                        //Console.WriteLine(controlledReactors.ReactivePowerFirst);
+                                        Console.WriteLine(controlledReactors.ReactivePowerFirst);
 
-                                        //rastr.SetValueQ();
-                                        // rastr.Regime();
+                                        rastr.SetValueQ();
+                                        rastr.Regime();
 
-                                        // Console.WriteLine("Параметры после изменения");
-                                        //controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[0];
-                                        // controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
+                                        Console.WriteLine("Параметры после изменения");
+                                        controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[0];
+                                        controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
 
-                                        //controlledReactors.Effect();
+                                        double a = controlledReactors.Effect();
 
-                                        // Console.WriteLine("Параметры до изменения");
-                                        
-                                        
+                                        Console.WriteLine(Math.Abs(a));
 
                                         break;
                                     }
-                               /* case "2":
+                                case "2":
                                     {
-                                        Console.WriteLine("ШР-500 ПС 500 кВ Томская");
+                                        Console.WriteLine("СТК-1 ПС 500 кВ Заря");
+
+                                        ControlledReactors controlledReactors = new ControlledReactors();
+                                        RastrСalculation rastr = new RastrСalculation();
+
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+                                        rastr.Regime();
+                                        rastr.SetFix();
+                                        rastr.Regime();
+                                        Console.WriteLine("Параметры до изменения");
+                                        controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[2];
+                                        Console.WriteLine(controlledReactors.ReactivePowerFirst);
+                                        controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[1];
+
+                                        rastr.SetValueQ();
+                                        rastr.Regime();
+
+                                        Console.WriteLine("Параметры после изменения");
+                                        controlledReactors.ReactivePowerSecond = rastr.GetPowerReacSecond()[2];
+                                        Console.WriteLine(controlledReactors.ReactivePowerSecond);
+                                        controlledReactors.VoltageSecond = rastr.GetVoltageYSecond()[1];
+
+                                        double a = controlledReactors.Effect();
+
+                                        Console.WriteLine(Math.Abs(a));
+
                                         break;
-                                    }*/
+                                    }
                                 case "3":
                                     {
                                         Console.WriteLine("Беловская ГРЭС");
