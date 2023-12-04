@@ -103,6 +103,7 @@ namespace ModelODU
             Data data = new Data();
             List<VoltageControlPoints> listQSet = data.VoltageControlPoints;
           
+
             List<int> listEnumerationQSet = new List<int> { 0, 1, 2 };
 
             foreach (var itemEnQSet in listEnumerationQSet)
@@ -125,8 +126,6 @@ namespace ModelODU
                     powerReacGen.set_ZN(n, Q);
                 }
             }
-           
-
         }
         
 
@@ -191,11 +190,7 @@ namespace ModelODU
 
             }
             return listNewU1;
-
         }
-
-
-
         
         /// <summary>
         /// Получение напряжения в КП из Rastr после изменений
@@ -233,7 +228,7 @@ namespace ModelODU
             _rastr.rgm("");
         }
 
-        /*
+        
         /// <summary>
         /// Получение начального состояния шунтирующего реактора из Rastr 
         /// </summary>
@@ -241,22 +236,29 @@ namespace ModelODU
         public List<int> GetReacConditionFirst()
         {
             Data data = new Data();
-            List<int> list = data.NumbersOfSwitchedReactorsFromRastr;
-            List<int> listNew = new List<int>();
+            List<VoltageControlPoints> listC1 = data.VoltageControlPoints;
+            List<int> listNewC1 = new List<int>();
 
-            ITable Node = (ITable)_rastr.Tables.Item("node");
-            ICol conditionReactor = (ICol)Node.Cols.Item("sta");
-            ICol NumberNode = (ICol)Node.Cols.Item("ny");
-            ICol name = (ICol)Node.Cols.Item("name");       
-
-            foreach (var item in list)
+            List<int> listEnumerationC1 = new List<int> { 0, 1, 2 };
+            foreach (var itemEnC1 in listEnumerationC1)
             {
-                Node.SetSel($"ny = {item}");
-                int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
-                listNew.Add(Convert.ToInt32(conditionReactor.Z[n]));
-            }
-            return listNew;
+                List<VoltageControlPoints> subListC1 = listC1.Where((C1) =>
+                C1.ParametersOfVoltageRegulationMeans[itemEnC1].TypeOfVoltageRegulationMeans == "коммутируемый").ToList();
+
+                ITable Node = (ITable)_rastr.Tables.Item("node");
+                ICol conditionReactor = (ICol)Node.Cols.Item("sta");
+                ICol NumberNode = (ICol)Node.Cols.Item("ny");
+                ICol name = (ICol)Node.Cols.Item("name");
+
+                foreach (var itemC1 in subListC1)
+                {
+                    Node.SetSel($"ny = {itemC1.ParametersOfVoltageRegulationMeans[itemEnC1].NumberOfVoltageRegulationMeans}");
+                    int n = Node.FindNextSel[-1];
+                    Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
+                    listNewC1.Add(Convert.ToInt32(conditionReactor.Z[n]));
+                }
+            }           
+            return listNewC1;          
         }
 
 
@@ -266,28 +268,34 @@ namespace ModelODU
         public void SetReacCondition()
         {
             Data data = new Data();
-            List<int> list = data.NumbersOfSwitchedReactorsFromRastr;
+            List<VoltageControlPoints> listCSet = data.VoltageControlPoints;
+            List<int> listEnumerationCSet = new List<int> { 0, 1, 2 };
 
-            ITable Node = (ITable)_rastr.Tables.Item("node");
-            ITable Vetv = (ITable)_rastr.Tables.Item("vetv");
-            ICol conditionReactorY = (ICol)Node.Cols.Item("sta");
-            ICol conditionReactorV = (ICol)Vetv.Cols.Item("sta");
-            ICol NumberNode = (ICol)Node.Cols.Item("ny");
-            ICol name = (ICol)Node.Cols.Item("name");
-
-            foreach (var item in list)
+            foreach (var itemEnCSet in listEnumerationCSet)
             {
-                int reacConditionY = 1;
-                int reacConditionV = 1;
-                Node.SetSel($"ny = {item}");
-                int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Статус работы: {conditionReactorY.Z[n]}. Имя КП: {name.Z[n]}");
-                Console.WriteLine($"Статус работы: {conditionReactorV.Z[n]}. Имя КП: {name.Z[n]}");
-                conditionReactorY.set_ZN(n, reacConditionY);
-                conditionReactorV.set_ZN(n, reacConditionV);
+                List<VoltageControlPoints> subListCSet = listCSet.Where((C1) =>
+                C1.ParametersOfVoltageRegulationMeans[itemEnCSet].TypeOfVoltageRegulationMeans == "коммутируемый").ToList();
+
+                ITable Node = (ITable)_rastr.Tables.Item("node");
+                ITable Vetv = (ITable)_rastr.Tables.Item("vetv");
+                ICol conditionReactorY = (ICol)Node.Cols.Item("sta");
+                ICol conditionReactorV = (ICol)Vetv.Cols.Item("sta");
+                ICol NumberNode = (ICol)Node.Cols.Item("ny");
+                ICol name = (ICol)Node.Cols.Item("name");
+
+                foreach (var itemCSet in subListCSet)
+                {
+                    int reacConditionY = 1;
+                    int reacConditionV = 1;
+                    Node.SetSel($"ny = {itemCSet.ParametersOfVoltageRegulationMeans[itemEnCSet].NumberOfVoltageRegulationMeans}");
+                    int n = Node.FindNextSel[-1];
+                    Console.WriteLine($"Статус работы: {conditionReactorY.Z[n]}. Имя КП: {name.Z[n]}");
+                    Console.WriteLine($"Статус работы: {conditionReactorV.Z[n]}. Имя КП: {name.Z[n]}");
+                    conditionReactorY.set_ZN(n, reacConditionY);
+                    conditionReactorV.set_ZN(n, reacConditionV);
+                }
             }
 
-           
         }
 
         /// <summary>
@@ -297,24 +305,31 @@ namespace ModelODU
         public List<int> GetReacConditionSecond()
         {
             Data data = new Data();
-            List<int> list = data.NumbersOfSwitchedReactorsFromRastr;
-            List<int> listNew = new List<int>();
+            List<VoltageControlPoints> listC2 = data.VoltageControlPoints;
+            List<int> listNewC2 = new List<int>();
 
-            ITable Node = (ITable)_rastr.Tables.Item("node");
-            ICol conditionReactor = (ICol)Node.Cols.Item("sta");
-            ICol NumberNode = (ICol)Node.Cols.Item("ny");
-            ICol name = (ICol)Node.Cols.Item("name");
-
-            foreach (var item in list)
+            List<int> listEnumerationC2 = new List<int> { 0, 1, 2 };
+            foreach (var itemEnC2 in listEnumerationC2)
             {
-                Node.SetSel($"ny = {item}");
-                int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
-                listNew.Add(Convert.ToInt32(conditionReactor.Z[n]));
+                List<VoltageControlPoints> subListC2 = listC2.Where((C2) =>
+                C2.ParametersOfVoltageRegulationMeans[itemEnC2].TypeOfVoltageRegulationMeans == "коммутируемый").ToList();
+
+                ITable Node = (ITable)_rastr.Tables.Item("node");
+                ICol conditionReactor = (ICol)Node.Cols.Item("sta");
+                ICol NumberNode = (ICol)Node.Cols.Item("ny");
+                ICol name = (ICol)Node.Cols.Item("name");
+
+                foreach (var itemC2 in subListC2)
+                {
+                    Node.SetSel($"ny = {itemC2.ParametersOfVoltageRegulationMeans[itemEnC2].NumberOfVoltageRegulationMeans}");
+                    int n = Node.FindNextSel[-1];
+                    Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
+                    listNewC2.Add(Convert.ToInt32(conditionReactor.Z[n]));
+                }
             }
-            return listNew;
+            return listNewC2;
         }
-        */
+        
 
         /*
         /// <summary>
