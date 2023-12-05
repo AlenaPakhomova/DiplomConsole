@@ -70,7 +70,7 @@ namespace ModelODU
 
             List<double> listNewQ1 = new List<double>();
 
-            List<int> listEnumerationQ1 = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationQ1 = new List<int> { 0, 1, 2, 3 };
             foreach (var itemEnQ1 in listEnumerationQ1)
             {
                 List<VoltageControlPoints> subListQ1 = listQ1.Where((Q1) =>
@@ -81,6 +81,7 @@ namespace ModelODU
                 ICol NumberNode = (ICol)Node.Cols.Item("ny");
                 ICol name = (ICol)Node.Cols.Item("name");
 
+
                 foreach (var itemQ1 in subListQ1)
                 {
                     Node.SetSel($"ny = {itemQ1.ParametersOfVoltageRegulationMeans[itemEnQ1].NumberOfVoltageRegulationMeans}");
@@ -89,8 +90,7 @@ namespace ModelODU
                     listNewQ1.Add(Convert.ToDouble(powerReacGen.Z[n]));
                 }              
             }                                 
-            return listNewQ1;
-          
+            return listNewQ1;        
         }
         
 
@@ -104,7 +104,7 @@ namespace ModelODU
             List<VoltageControlPoints> listQSet = data.VoltageControlPoints;
           
 
-            List<int> listEnumerationQSet = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationQSet = new List<int> { 0, 1, 2, 3 };
 
             foreach (var itemEnQSet in listEnumerationQSet)
             {
@@ -141,7 +141,7 @@ namespace ModelODU
 
             List<double> listNewQ2 = new List<double>();
 
-            List<int> listEnumerationQ2 = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationQ2 = new List<int> { 0, 1, 2, 3 };
             foreach (var itemEnQ2 in listEnumerationQ2)
             {
                 List<VoltageControlPoints> subListQ2 = listQ2.Where((Q1) =>
@@ -163,6 +163,7 @@ namespace ModelODU
             return listNewQ2;
 
         }
+
 
 
         /// <summary>
@@ -239,10 +240,10 @@ namespace ModelODU
             List<VoltageControlPoints> listC1 = data.VoltageControlPoints;
             List<int> listNewC1 = new List<int>();
 
-            List<int> listEnumerationC1 = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationC1 = new List<int> { 0, 1, 2, 3 };
             foreach (var itemEnC1 in listEnumerationC1)
             {
-                List<VoltageControlPoints> subListC1 = listC1.Where((C1) =>
+                List<VoltageControlPoints> subListC1 = listC1.Where((C1) =>               
                 C1.ParametersOfVoltageRegulationMeans[itemEnC1].TypeOfVoltageRegulationMeans == "коммутируемый").ToList();
 
                 ITable Node = (ITable)_rastr.Tables.Item("node");
@@ -269,7 +270,7 @@ namespace ModelODU
         {
             Data data = new Data();
             List<VoltageControlPoints> listCSet = data.VoltageControlPoints;
-            List<int> listEnumerationCSet = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationCSet = new List<int> { 0, 1, 2, 3 };
 
             foreach (var itemEnCSet in listEnumerationCSet)
             {
@@ -308,7 +309,7 @@ namespace ModelODU
             List<VoltageControlPoints> listC2 = data.VoltageControlPoints;
             List<int> listNewC2 = new List<int>();
 
-            List<int> listEnumerationC2 = new List<int> { 0, 1, 2 };
+            List<int> listEnumerationC2 = new List<int> { 0, 1, 2, 3 };
             foreach (var itemEnC2 in listEnumerationC2)
             {
                 List<VoltageControlPoints> subListC2 = listC2.Where((C2) =>
