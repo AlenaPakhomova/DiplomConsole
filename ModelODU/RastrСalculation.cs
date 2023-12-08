@@ -19,7 +19,7 @@ namespace ModelODU
         /// Загрузка файла режима RastrWin3 для расчётов
         /// </summary>
         public string pathFile = "C:\\Users\\Алена\\Desktop\\Диплом\\РМ для растра новая" +
-            "\\РМ Rastra\\С фиксированными СКРМ\\Зима 18-00.rg2";
+            "\\РМ Rastra\\Зима2020\\18-00.rg2";
 
         /// <summary>
         /// Шаблон для RastrWin3
@@ -121,7 +121,7 @@ namespace ModelODU
 
                 foreach (var itemQSet in subListQSet)
                 {
-                    int Q = -130;
+                    int Q = -80;
                     Node.SetSel($"ny = {itemQSet.ParametersOfVoltageRegulationMeans[itemEnQSet].NumberOfVoltageRegulationMeans}");
                     int n = Node.FindNextSel[-1];
                    // Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
