@@ -61,8 +61,8 @@ namespace DiplomVConsoleSmallScheme
                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
-                                        rastr.SetFix();
-                                        rastr.Regime();
+                                        //rastr.SetFix();
+                                        //rastr.Regime();
                                         Console.WriteLine("Параметры до изменения");
                                         controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
                                         controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
