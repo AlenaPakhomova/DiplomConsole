@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 namespace ModelODU
 {
     /// <summary>
-    /// Класс для исходных данных.
+    /// Класс для исходных данных
     /// </summary>
     public class Data
     {
-
+        /// <summary>
+        /// Список для СРН на ПС 500 кВ Ново-Анжерская
+        /// </summary>
         private static List<VoltageRegulationMeans> MeansOfSubstationNovoAngerskaya = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
@@ -22,6 +24,9 @@ namespace ModelODU
             new VoltageRegulationMeans("Р-532 ПС 500 кВ Заря", "коммутируемый", 60700130),
         };
 
+        /// <summary>
+        /// Список СРН на Беловской ГРЭС
+        /// </summary>
         private static List<VoltageRegulationMeans> MeansOfBelovskayaGRES = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
@@ -30,6 +35,9 @@ namespace ModelODU
             new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
         };
 
+        /// <summary>
+        /// Список СРН на ПС 500 кВ Юрга
+        /// </summary>
         private static List<VoltageRegulationMeans> MeansOfSubstationJurga = new List<VoltageRegulationMeans>()
         {
             new VoltageRegulationMeans("УШР-500 ПС 500 кВ Томская", "управляемый", 60901160),
@@ -38,6 +46,9 @@ namespace ModelODU
             new VoltageRegulationMeans("P-1 ПС 500 кВ Ново-Анжерская", "коммутируемый", 60690257),
         };
 
+        /// <summary>
+        /// Список контрольных пунктов
+        /// </summary>
         public List<VoltageControlPoints> VoltageControlPoints = new List<VoltageControlPoints>()
         {          
             new VoltageControlPoints("ПС 500 кВ Ново-Анжерская", 60690204, MeansOfSubstationNovoAngerskaya),
@@ -45,7 +56,20 @@ namespace ModelODU
             new VoltageControlPoints("ПС 500 кВ Юрга", 60690352, MeansOfSubstationJurga)
         };
 
+        public List<ParametersForChangingRegime> ParametersForChangingRegimes = new List<ParametersForChangingRegime>()
+        {
+            new ParametersForChangingRegime(),
+            new ParametersForChangingRegime(),
+            new ParametersForChangingRegime(),
+            new ParametersForChangingRegime(),
+            new ParametersForChangingRegime(),
+            new ParametersForChangingRegime(),
+        };
 
+
+        /// <summary>
+        /// Список узлов для фиксации
+        /// </summary>
         public List<int> NodesForFixing = new List<int>()
         {
             70606220,
@@ -117,62 +141,6 @@ namespace ModelODU
             60211249,
             60211252,
         };
-
-
-
-        /// <summary>
-        /// Спискок, хранящий номера узлов с контрольными пунктами из файла режима
-        /// ПС 500 кВ Ново-Анжерская, ПС 500 кВ Юрга, ПС 500 кВ Новокузнецкая
-        /// </summary>
-        public List<int> NumbersOfNodes = new List<int>()
-        {
-            60690204,
-            60690352,
-            60690215
-        };
-
-        /// <summary>
-        /// Спискок, хранящий номера узлов с управляемыми реакторами из файла режима
-        /// УШР-500 на ПС 500 кВ Томская, ПС 500 кВ Заря СТК-1, УШР-500 на ПС 500 кВ Томская
-        /// </summary>
-        public List<int> NumbersOfControlledReactors = new List<int>()
-        {
-            60901160,
-            60700638,
-            60901160,
-        };
-
-        /// <summary>
-        /// Спискок, хранящий номера узлов с коммутируемыми реакторами из файла режима
-        /// ШР-500 на ПС 500 кВ Томская, ПС 500 кВ Заря Р-532, ПС 500 кВ Абаканская
-        /// </summary>
-        public List<int> NumbersOfSwitchedReactorsFromRastr = new List<int>()
-        {
-            60901161,
-            60700130,
-            61111103
-        };
-
-        /// <summary>
-        /// Список, хранящий номера узлов генераторов влияющих станций
-        /// Берёзовская ГРЭС ТГ-1, Берёзовская ГРЭС ТГ-1, Берёзовская ГРЭС ТГ-1
-        /// </summary>
-        public List<int> ResearchingGeneratorsFromRastr = new List<int>()
-        {
-            61190059,
-            61190059,
-            61190059
-        };
-
-        /// <summary>
-        /// Все строки с узлами в схеме для фисксации всех СРН
-        /// </summary>
-        public int[] arrNub = Enumerable.Range(0, 5771).ToArray();
-
-
-
-        
-
 
 
     }

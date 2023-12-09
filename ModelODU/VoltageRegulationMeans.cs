@@ -71,7 +71,12 @@ namespace ModelODU
             }
         }
 
-        
+        /// <summary>
+        /// Конструктор для средств регулирования напряжения
+        /// </summary>
+        /// <param name="_nameOfVoltageRegulationMeans"></param>
+        /// <param name="_typeOfVoltageRegulationMeans"></param>
+        /// <param name="_numberOfVoltageRegulationMeans"></param>
         public VoltageRegulationMeans(string _nameOfVoltageRegulationMeans,
             string _typeOfVoltageRegulationMeans, int _numberOfVoltageRegulationMeans)
         {
