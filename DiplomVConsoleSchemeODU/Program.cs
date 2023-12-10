@@ -3,6 +3,8 @@ using ModelODU;
 using ModelODU.VoltageRegulation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DiplomVConsoleSmallScheme
@@ -12,6 +14,7 @@ namespace DiplomVConsoleSmallScheme
     /// </summary>
     public class Program
     {
+
         /// <summary>
         /// Точка входа в программу
         /// </summary>
@@ -23,6 +26,11 @@ namespace DiplomVConsoleSmallScheme
                 "вычисления эффективности СРН!\n" +
                 "Нажмите любую кнопку, чтобы начать...");
             Console.ReadKey();
+
+            RastrСalculation rastr = new RastrСalculation();
+            rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+            rastr.Regime();
+            rastr.SetNewValueGenerator();
 
 
             while (true)
@@ -56,8 +64,7 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
          
-                                        ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        ControlledReactors controlledReactors = new ControlledReactors();                                       
                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -88,7 +95,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("СТК-1 ПС 500 кВ Заря");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -118,7 +125,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("ШР-500 ПС 500 кВ Томская");
 
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -147,7 +154,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("Р-532 ПС 500 кВ Заря");
 
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -195,7 +202,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -226,7 +233,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("СТК-1 ПС 500 кВ Заря");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -255,7 +262,7 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         Console.WriteLine("ШР-500 ПС 500 кВ Томская");
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -284,7 +291,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("P-1 ПС 500 кВ Ново-Анжерская");
 
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                       
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -334,7 +341,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                       
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -365,8 +372,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("СТК-1 ПС 500 кВ Заря");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
-
+                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
                                         rastr.SetFix();
@@ -394,7 +400,7 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         Console.WriteLine("ШР-500 ПС 500 кВ Томская");
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -423,7 +429,7 @@ namespace DiplomVConsoleSmallScheme
                                         Console.WriteLine("P-1 ПС 500 кВ Ново-Анжерская");
 
                                         SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        RastrСalculation rastr = new RastrСalculation();
+                                        
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ASTRALib;
+
 
 
 namespace ModelODU
@@ -42,8 +44,6 @@ namespace ModelODU
         }
 
 
-
-
         /// <summary>
         /// Фиксация всех средств регулирования напряжения
         /// </summary>
@@ -67,46 +67,86 @@ namespace ModelODU
 
         public void SetNewValueGenerator()
         {
+            Console.WriteLine("Введите временной интервал.");
+            Console.WriteLine("Начало интервала (ГГ:ММ:ДД): ");
+            Regex regex = new Regex(@"\d+[:]\d+");
+            System.DateTime time;
+            while (true)
+            {
+                string time1 = Console.ReadLine();
+                while (!regex.IsMatch(time1))
+                {
+                    Console.WriteLine("Не удалось распознать время" +
+                                       " отправления, введите снова!");
+                }
+                try
+                {
+                    // (год, месяц, день, час, минута, секунда)
+                    time = new DateTime(int.Parse(Regex.Split(time1, ":")[0]),
+                                        int.Parse(Regex.Split(time1, ":")[1]),
+                                        int.Parse(Regex.Split(time1, ":")[2]));
+                    break;
+                }
+
+                // Ловит, если аргумент функции имеет слишком большое или
+                // слишком маленькое значение для данного типа
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Ошибка! Введите корректное время.");
+                }
+            }
+
+            Console.WriteLine("Конец интервала (Г:М:Д): ");
+            while (true)
+            {
+                string time2 = Console.ReadLine();
+                while (!regex.IsMatch(time2))
+                {
+                    Console.WriteLine("Не удалось распознать время" +
+                                       " отправления, введите снова!");
+                }
+                try
+                {
+                    // (год, месяц, день, час, минута, секунда)
+                    time = new DateTime(int.Parse(Regex.Split(time2, ":")[0]),
+                                        int.Parse(Regex.Split(time2, ":")[1]),
+                                        int.Parse(Regex.Split(time2, ":")[2]));
+                    break;
+                }
+
+                // Ловит, если аргумент функции имеет слишком большое или
+                // слишком маленькое значение для данного типа
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Ошибка! Введите корректное время.");
+                }
+            }
+
             Data data = new Data();
             List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
             List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             foreach (var itemQGen in listEnQGen)
             {
-                
-
-            }
-        }
-        \/*
-        public void SetValueQ()
-        {
-            Data data = new Data();
-            List<VoltageControlPoints> listQSet = data.VoltageControlPoints;
-
-
-            List<int> listEnumerationQSet = new List<int> { 0, 1, 2, 3 };
-
-            foreach (var itemEnQSet in listEnumerationQSet)
-            {
-                List<VoltageControlPoints> subListQSet = listQSet.Where((Q1) =>
-                Q1.ParametersOfVoltageRegulationMeans[itemEnQSet].TypeOfVoltageRegulationMeans == "управляемый").ToList();
-
+                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) => QGen.ParametersOfGenerator[itemQGen].TimeInterval == time).ToList();
                 ITable Node = (ITable)_rastr.Tables.Item("node");
-                ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+                ICol powerActiveGen = (ICol)Node.Cols.Item("pg");
                 ICol NumberNode = (ICol)Node.Cols.Item("ny");
                 ICol name = (ICol)Node.Cols.Item("name");
 
-                foreach (var itemQSet in subListQSet)
+                foreach (var itemQGenSet in subLictQGen)
                 {
-                    int Q = -80;
-                    Node.SetSel($"ny = {itemQSet.ParametersOfVoltageRegulationMeans[itemEnQSet].NumberOfVoltageRegulationMeans}");
+                    Node.SetSel($"ny = {itemQGenSet.ParametersOfGenerator[itemQGen].NumberOfGeneratorNode}");
                     int n = Node.FindNextSel[-1];
-                    // Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
-                    powerReacGen.set_ZN(n, Q);
+                    Console.WriteLine($"Имя Генератора: {name.Z[n]}");
+                    powerActiveGen.set_ZN(n, itemQGenSet.ParametersOfGenerator[itemQGen].ActivePowerOfGenerator);
                 }
-            }
+            };
         }
-        */
+        
+
+       
+        
 
 
 

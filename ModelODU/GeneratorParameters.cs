@@ -9,6 +9,11 @@ namespace ModelODU
     public class GeneratorParameters
     {
         /// <summary>
+        /// Переменная для номер узла генератора в Rastr
+        /// </summary>
+        private int _numberOfGeneratorNode;
+
+        /// <summary>
         /// Переменная для времени 
         /// </summary>
         private DateTime _timeInterval;
@@ -17,6 +22,21 @@ namespace ModelODU
         /// Переменная для активнйо мощности генератора
         /// </summary>
         private double _activePowerOfGenerator;
+
+        /// <summary>
+        /// Номер узла генератора в Rastr
+        /// </summary>
+        public int NumberOfGeneratorNode
+        {
+            get
+            {
+                return _numberOfGeneratorNode;
+            }
+            set
+            {
+                _numberOfGeneratorNode = value;
+            }
+        }
 
 
         /// <summary>
@@ -54,10 +74,11 @@ namespace ModelODU
         /// </summary>
         /// <param name="_timeInterval"></param>
         /// <param name="_activePowerOfGenerator"></param>
-        public GeneratorParameters(DateTime _timeInterval, double _activePowerOfGenerator)
+        public GeneratorParameters(DateTime _timeInterval, int _numberOfGeneratorNode, double _activePowerOfGenerator)
         {
             TimeInterval = _timeInterval;
             ActivePowerOfGenerator = _activePowerOfGenerator;
+            NumberOfGeneratorNode = _numberOfGeneratorNode;
         }
     }
 }
