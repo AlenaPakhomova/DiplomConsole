@@ -13,11 +13,6 @@ namespace ModelODU
     public class ParametersForChangingRegime
     {
         /// <summary>
-        /// Переменная для времени 
-        /// </summary>
-        private DateTime _timeInterval;
-
-        /// <summary>
         /// Переменная для имени генератора 
         /// </summary>
         private string _generatorNames;
@@ -28,24 +23,10 @@ namespace ModelODU
         private int _numberOfGeneratorNode;
 
         /// <summary>
-        /// Переменная для активнйо мощности генератора
+        /// Переменная для параметров генератора
         /// </summary>
-        private double _activePowerOfGenerator;
+        private List<GeneratorParameters> _parametersOfGenerator;
 
-        /// <summary>
-        /// Время 
-        /// </summary>
-        public DateTime TimeInterval
-        {
-            get
-            {
-                return _timeInterval;
-            }
-            set
-            {
-                _timeInterval = value;
-            }
-        }
 
         /// <summary>
         /// Имя генератора
@@ -78,34 +59,33 @@ namespace ModelODU
         }
 
         /// <summary>
-        /// Активная мощность генератора 
+        /// Параметры генератора
         /// </summary>
-        public double ActivePowerOfGenerator
+        public List<GeneratorParameters> ParametersOfGenerator
         {
             get
             {
-                return _activePowerOfGenerator;
+
+                return _parametersOfGenerator;
             }
             set
             {
-                _activePowerOfGenerator = value;
+                _parametersOfGenerator = value;
             }
         }
 
         /// <summary>
         /// Конструктор для параметров, которые изменяют режим
         /// </summary>
-        /// <param name="_timeInterval"></param>
         /// <param name="_generatorNames"></param>
         /// <param name="_numberOfGeneratorNode"></param>
-        /// <param name="_activePowerOfGenerator"></param>
-        public ParametersForChangingRegime(DateTime _timeInterval,  string _generatorNames, 
-           int _numberOfGeneratorNode, double _activePowerOfGenerator)
-        {
-            TimeInterval = _timeInterval;
+        /// <param name="_parametersOfGenerator"></param>
+        public ParametersForChangingRegime( string _generatorNames, 
+           int _numberOfGeneratorNode, List<GeneratorParameters> _parametersOfGenerator)
+        {           
             GeneratorNames = _generatorNames;
-            NumberOfGeneratorNode= _numberOfGeneratorNode;
-            ActivePowerOfGenerator= _activePowerOfGenerator;
+            NumberOfGeneratorNode = _numberOfGeneratorNode;
+            ParametersOfGenerator = _parametersOfGenerator;
         }
     }
 }

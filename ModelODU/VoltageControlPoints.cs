@@ -22,7 +22,7 @@ namespace ModelODU
         private int _numberOfControlPoints;
 
         /// <summary>
-        /// Переменная для названия средства регулирования напряжения
+        /// Переменная для парметров средства регулирования напряжения
         /// </summary>
         private List<VoltageRegulationMeans> _parametersOfVoltageRegulationMeans;
         
@@ -58,7 +58,7 @@ namespace ModelODU
         }
 
         /// <summary>
-        /// Название средства регулирования напряжения
+        /// Параметры средства регулирования напряжения
         /// </summary>
         public List<VoltageRegulationMeans> ParametersOfVoltageRegulationMeans
         {
@@ -88,6 +88,6 @@ namespace ModelODU
             ParametersOfVoltageRegulationMeans = listOfMeans;
         }
 
-        
     }
+        
 }

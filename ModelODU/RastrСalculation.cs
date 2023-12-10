@@ -41,6 +41,9 @@ namespace ModelODU
             _rastr.Load(RG_KOD.RG_REPL, pathFile, pathShablon);
         }
 
+
+
+
         /// <summary>
         /// Фиксация всех средств регулирования напряжения
         /// </summary>
@@ -62,7 +65,51 @@ namespace ModelODU
             }
         }
 
-        
+        public void SetNewValueGenerator()
+        {
+            Data data = new Data();
+            List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
+            List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            foreach (var itemQGen in listEnQGen)
+            {
+                
+
+            }
+        }
+        \/*
+        public void SetValueQ()
+        {
+            Data data = new Data();
+            List<VoltageControlPoints> listQSet = data.VoltageControlPoints;
+
+
+            List<int> listEnumerationQSet = new List<int> { 0, 1, 2, 3 };
+
+            foreach (var itemEnQSet in listEnumerationQSet)
+            {
+                List<VoltageControlPoints> subListQSet = listQSet.Where((Q1) =>
+                Q1.ParametersOfVoltageRegulationMeans[itemEnQSet].TypeOfVoltageRegulationMeans == "управляемый").ToList();
+
+                ITable Node = (ITable)_rastr.Tables.Item("node");
+                ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+                ICol NumberNode = (ICol)Node.Cols.Item("ny");
+                ICol name = (ICol)Node.Cols.Item("name");
+
+                foreach (var itemQSet in subListQSet)
+                {
+                    int Q = -80;
+                    Node.SetSel($"ny = {itemQSet.ParametersOfVoltageRegulationMeans[itemEnQSet].NumberOfVoltageRegulationMeans}");
+                    int n = Node.FindNextSel[-1];
+                    // Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
+                    powerReacGen.set_ZN(n, Q);
+                }
+            }
+        }
+        */
+
+
+
         /// <summary>
         /// Получение реактивной мощности реактора до изменений из Rastr
         /// </summary>
