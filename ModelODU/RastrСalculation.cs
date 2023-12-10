@@ -65,6 +65,7 @@ namespace ModelODU
             }
         }
 
+        /*
         public void SetNewValueGenerator()
         {
             Console.WriteLine("Введите временной интервал.");
@@ -144,7 +145,7 @@ namespace ModelODU
             };
         }
         
-
+        */
        
         
 
