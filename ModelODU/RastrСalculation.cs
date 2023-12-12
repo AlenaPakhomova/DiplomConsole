@@ -65,16 +65,18 @@ namespace ModelODU
             }
         }
 
-        /*
+        
         public void SetNewValueGenerator()
         {
+            DateTime time1;
+            DateTime time2;
             Console.WriteLine("Введите временной интервал.");
             Console.WriteLine("Начало интервала (ГГ:ММ:ДД): ");
             Regex regex = new Regex(@"\d+[:]\d+");
             System.DateTime time;
             while (true)
             {
-                string time1 = Console.ReadLine();
+                time1 = Convert.ToString(Console.ReadLine());
                 while (!regex.IsMatch(time1))
                 {
                     Console.WriteLine("Не удалось распознать время" +
@@ -100,7 +102,7 @@ namespace ModelODU
             Console.WriteLine("Конец интервала (Г:М:Д): ");
             while (true)
             {
-                string time2 = Console.ReadLine();
+                time2 = Console.ReadLine();
                 while (!regex.IsMatch(time2))
                 {
                     Console.WriteLine("Не удалось распознать время" +
@@ -129,7 +131,7 @@ namespace ModelODU
 
             foreach (var itemQGen in listEnQGen)
             {
-                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) => QGen.ParametersOfGenerator[itemQGen].TimeInterval == time).ToList();
+                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  QGen.ParametersOfGenerator[itemQGen].TimeInterval >= time1 && QGen.ParametersOfGenerator[itemQGen].TimeInterval <= time2)).ToList();
                 ITable Node = (ITable)_rastr.Tables.Item("node");
                 ICol powerActiveGen = (ICol)Node.Cols.Item("pg");
                 ICol NumberNode = (ICol)Node.Cols.Item("ny");
@@ -145,7 +147,7 @@ namespace ModelODU
             };
         }
         
-        */
+       
        
         
 
