@@ -127,29 +127,29 @@ namespace ModelODU
 
             Data data = new Data();
             List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
-            List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
 
-            foreach (var itemQGen in listEnQGen)
+            foreach (var itemEnQGen in listEnQGen)
             {
-                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  QGen.ParametersOfGenerator[itemQGen].TimeInterval >= time1 && QGen.ParametersOfGenerator[itemQGen].TimeInterval <= time2)).ToList();
-                ITable Node = (ITable)_rastr.Tables.Item("node");
-                ICol powerActiveGen = (ICol)Node.Cols.Item("pg");
-                ICol NumberNode = (ICol)Node.Cols.Item("ny");
-                ICol name = (ICol)Node.Cols.Item("name");
+                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  
+                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1 && 
+                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval <= time2).ToList();
 
-                foreach (var itemQGenSet in subLictQGen)
+                ITable Generator = (ITable)_rastr.Tables.Item("Generator");
+                ICol powerActiveLoad = (ICol)Generator.Cols.Item("P");
+                ICol NumberGen = (ICol)Generator.Cols.Item("Num");
+                ICol nameBus = (ICol)Generator.Cols.Item("Name");
+
+                foreach (var itemQGen in subLictQGen)
                 {
-                    Node.SetSel($"ny = {itemQGenSet.ParametersOfGenerator[itemQGen].NumberOfGeneratorNode}");
-                    int n = Node.FindNextSel[-1];
-                    Console.WriteLine($"Имя Генератора: {name.Z[n]}");
-                    powerActiveGen.set_ZN(n, itemQGenSet.ParametersOfGenerator[itemQGen].ActivePowerOfGenerator);
+                    Generator.SetSel($"Num = {itemQGen.ParametersOfGenerator[itemEnQGen].NumberOfGeneratorNode}");
+                    int n = Generator.FindNextSel[-1];
+                    //Console.WriteLine($"Имя Генератора: {name.Z[n]}");
+                    powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
+                    Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
                 }
             };
         }
-        
-       
-       
-        
 
 
 

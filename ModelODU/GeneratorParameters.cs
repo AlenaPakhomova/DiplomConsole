@@ -77,8 +77,8 @@ namespace ModelODU
         public GeneratorParameters(DateTime _timeInterval, int _numberOfGeneratorNode, double _activePowerOfGenerator)
         {
             TimeInterval = _timeInterval;
-            ActivePowerOfGenerator = _activePowerOfGenerator;
             NumberOfGeneratorNode = _numberOfGeneratorNode;
+            ActivePowerOfGenerator = _activePowerOfGenerator;           
         }
     }
 }
