@@ -64,9 +64,8 @@ namespace ModelODU
                 voltageZd.set_ZN(n, voltage);
             }
         }
-
-        
-        public void SetNewValueGenerator()
+      
+        public List<string> SetNewValueGenerator()
         {
             DateTime time1;
             DateTime time2;
@@ -75,6 +74,7 @@ namespace ModelODU
             Regex regex = new Regex(@"\d+[:]\d+");
             while (true)
             {
+
                 string timeConsole1 = Console.ReadLine();
                 while (!regex.IsMatch(timeConsole1))
                 {
@@ -125,9 +125,12 @@ namespace ModelODU
 
             }
 
+            List<string> listNewQGen = new List<string>();
+
             Data data = new Data();
             List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
             List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
+
 
             foreach (var itemEnQGen in listEnQGen)
             {
@@ -147,8 +150,12 @@ namespace ModelODU
                     //Console.WriteLine($"Имя Генератора: {name.Z[n]}");
                     powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
                     Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
-                }
-            };
+                    listNewQGen.Add(Convert.ToString(itemQGen.ParametersOfGenerator[itemEnQGen].TimeInterval));
+                    Console.WriteLine("+");
+                    
+                }              
+            }
+            return listNewQGen;
         }
 
 

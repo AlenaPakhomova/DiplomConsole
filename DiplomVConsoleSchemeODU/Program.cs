@@ -30,7 +30,11 @@ namespace DiplomVConsoleSmallScheme
             RastrСalculation rastr = new RastrСalculation();
             rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
             rastr.Regime();
-            rastr.SetNewValueGenerator();
+            
+
+            
+
+
 
 
 
