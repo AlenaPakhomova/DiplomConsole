@@ -73,11 +73,10 @@ namespace ModelODU
             Console.WriteLine("Введите временной интервал.");
             Console.WriteLine("Начало интервала (ГГ:ММ:ДД): ");
             Regex regex = new Regex(@"\d+[:]\d+");
-            System.DateTime time;
             while (true)
             {
-                time1 = Convert.ToString(Console.ReadLine());
-                while (!regex.IsMatch(time1))
+                string timeConsole1 = Console.ReadLine();
+                while (!regex.IsMatch(timeConsole1))
                 {
                     Console.WriteLine("Не удалось распознать время" +
                                        " отправления, введите снова!");
@@ -85,9 +84,9 @@ namespace ModelODU
                 try
                 {
                     // (год, месяц, день, час, минута, секунда)
-                    time = new DateTime(int.Parse(Regex.Split(time1, ":")[0]),
-                                        int.Parse(Regex.Split(time1, ":")[1]),
-                                        int.Parse(Regex.Split(time1, ":")[2]));
+                    time1 = new DateTime(int.Parse(Regex.Split(timeConsole1, ":")[0]),
+                                        int.Parse(Regex.Split(timeConsole1, ":")[1]),
+                                        int.Parse(Regex.Split(timeConsole1, ":")[2]));
                     break;
                 }
 
@@ -102,8 +101,8 @@ namespace ModelODU
             Console.WriteLine("Конец интервала (Г:М:Д): ");
             while (true)
             {
-                time2 = Console.ReadLine();
-                while (!regex.IsMatch(time2))
+                string timeConsole2 = Console.ReadLine();
+                while (!regex.IsMatch(timeConsole2))
                 {
                     Console.WriteLine("Не удалось распознать время" +
                                        " отправления, введите снова!");
@@ -111,9 +110,9 @@ namespace ModelODU
                 try
                 {
                     // (год, месяц, день, час, минута, секунда)
-                    time = new DateTime(int.Parse(Regex.Split(time2, ":")[0]),
-                                        int.Parse(Regex.Split(time2, ":")[1]),
-                                        int.Parse(Regex.Split(time2, ":")[2]));
+                    time2 = new DateTime(int.Parse(Regex.Split(timeConsole2, ":")[0]),
+                                        int.Parse(Regex.Split(timeConsole2, ":")[1]),
+                                        int.Parse(Regex.Split(timeConsole2, ":")[2]));
                     break;
                 }
 
@@ -123,6 +122,7 @@ namespace ModelODU
                 {
                     Console.WriteLine("Ошибка! Введите корректное время.");
                 }
+
             }
 
             Data data = new Data();
