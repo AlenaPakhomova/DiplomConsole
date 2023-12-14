@@ -67,6 +67,7 @@ namespace ModelODU
       
         public List<string> SetNewValueGenerator()
         {
+            
             DateTime time1;
             DateTime time2;
             Console.WriteLine("Введите временной интервал.");

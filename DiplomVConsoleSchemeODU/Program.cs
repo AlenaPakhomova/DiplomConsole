@@ -27,6 +27,8 @@ namespace DiplomVConsoleSmallScheme
                 "Нажмите любую кнопку, чтобы начать...");
             Console.ReadKey();
 
+
+            
             RastrСalculation rastr = new RastrСalculation();
             rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
             rastr.Regime();
@@ -40,7 +42,7 @@ namespace DiplomVConsoleSmallScheme
 
 
 
-            /*
+            
             while (true)
             {
                 Console.WriteLine("");
@@ -475,7 +477,7 @@ namespace DiplomVConsoleSmallScheme
                             break;
                         }
                 }
-            }*/
+            }
         }
     }
 }
