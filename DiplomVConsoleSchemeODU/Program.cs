@@ -27,22 +27,8 @@ namespace DiplomVConsoleSmallScheme
                 "Нажмите любую кнопку, чтобы начать...");
             Console.ReadKey();
 
-
-            
             RastrСalculation rastr = new RastrСalculation();
-            rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
-            rastr.Regime();
-            
 
-            
-
-
-
-
-
-
-
-            
             while (true)
             {
                 Console.WriteLine("");
@@ -73,13 +59,21 @@ namespace DiplomVConsoleSmallScheme
                                 case "1":
                                     {
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+
+                                        rastr.SetNewValueGenerator("1");
          
-                                        ControlledReactors controlledReactors = new ControlledReactors();                                       
+
+                                        /*
+                                        ControlledReactors controlledReactors = new ControlledReactors();
+
+
+                                        List<int> List1 = new List<int> { 0, 1 };
                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
                                         rastr.SetFix();
-                                        rastr.Regime();
+                                        
                                         Console.WriteLine("Параметры до изменения");
                                         controlledReactors.ReactivePowerFirst = rastr.GetReactivePowerFirst()[0];
                                         controlledReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
@@ -97,11 +91,13 @@ namespace DiplomVConsoleSmallScheme
                                         double a = controlledReactors.Effect();
 
                                         Console.WriteLine(a);
-
+                                        
+                                        */
                                         break;
                                     }
                                 case "2":
                                     {
+                                        
                                         Console.WriteLine("СТК-1 ПС 500 кВ Заря");
 
                                         ControlledReactors controlledReactors = new ControlledReactors();

@@ -7,8 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using ASTRALib;
-
-
+using ModelODU.VoltageRegulation;
 
 namespace ModelODU
 {
@@ -65,7 +64,7 @@ namespace ModelODU
             }
         }
       
-        public List<string> SetNewValueGenerator()
+        public List<double> SetNewValueGenerator(string consoleKey)
         {
             
             DateTime time1;
@@ -77,6 +76,7 @@ namespace ModelODU
             {
 
                 string timeConsole1 = Console.ReadLine();
+
                 while (!regex.IsMatch(timeConsole1))
                 {
                     Console.WriteLine("Не удалось распознать время" +
@@ -126,19 +126,21 @@ namespace ModelODU
 
             }
 
-            List<string> listNewQGen = new List<string>();
+            List<double> listNewQGen = new List<double>();
 
             Data data = new Data();
             List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
             List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
-
+            ControlledReactors controlledReactors = new ControlledReactors();
 
             foreach (var itemEnQGen in listEnQGen)
             {
                 List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  
-                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1 && 
+                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1
+                && 
                 QGen.ParametersOfGenerator[itemEnQGen].TimeInterval <= time2).ToList();
 
+                
                 ITable Generator = (ITable)_rastr.Tables.Item("Generator");
                 ICol powerActiveLoad = (ICol)Generator.Cols.Item("P");
                 ICol NumberGen = (ICol)Generator.Cols.Item("Num");
@@ -148,15 +150,48 @@ namespace ModelODU
                 {
                     Generator.SetSel($"Num = {itemQGen.ParametersOfGenerator[itemEnQGen].NumberOfGeneratorNode}");
                     int n = Generator.FindNextSel[-1];
-                    //Console.WriteLine($"Имя Генератора: {name.Z[n]}");
+                    Console.WriteLine($"Имя Генератора: {nameBus.Z[n]}");
                     powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
                     Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
-                    listNewQGen.Add(Convert.ToString(itemQGen.ParametersOfGenerator[itemEnQGen].TimeInterval));
-                    Console.WriteLine("+");
                     
-                }              
+                   // listNewQGen.Add(Convert.ToDouble(powerActiveLoad.Z[n]));                   
+                    Console.WriteLine("+");
+
+
+                   
+                }
+
+                switch(consoleKey)
+                {
+                    case "1":
+                        Console.WriteLine("УШР-500 ПС 500 кВ Томская");
+                        //LoadFile(pathFile, pathShablon);
+                        // LoadFile(pathFile, pathShablon);
+                        // Regime();
+                        //SetFix();
+
+                        Console.WriteLine("Параметры до изменения");
+                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
+                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+
+                        SetValueQ();
+                        Regime();
+
+
+                        Console.WriteLine("Параметры после изменения");
+                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
+                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+
+                        double a = controlledReactors.Effect();
+                        listNewQGen.Add(a);
+                        Console.WriteLine(a);
+                        break;
+
+                };
+                    
+                
             }
-            return listNewQGen;
+            return listNewQGen;         
         }
 
 
