@@ -132,6 +132,7 @@ namespace ModelODU
             List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
             List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
             ControlledReactors controlledReactors = new ControlledReactors();
+            SwitchedReactors switchedReactors = new SwitchedReactors();
 
             foreach (var itemEnQGen in listEnQGen)
             {
@@ -164,12 +165,7 @@ namespace ModelODU
                 switch(consoleKey)
                 {
                     case "1":
-                        Console.WriteLine("УШР-500 ПС 500 кВ Томская");
-                        //LoadFile(pathFile, pathShablon);
-                        // LoadFile(pathFile, pathShablon);
-                        // Regime();
-                        //SetFix();
-
+                         Regime();
                         Console.WriteLine("Параметры до изменения");
                         controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
                         controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
@@ -183,9 +179,63 @@ namespace ModelODU
                         controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
 
                         double a = controlledReactors.Effect();
-                        listNewQGen.Add(a);
+                        listNewQGen.Add(Math.Abs(a));
                         Console.WriteLine(a);
                         break;
+
+                    case "2":                                           
+                        Regime();
+                        Console.WriteLine("Параметры до изменения");
+                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[3];
+                        Console.WriteLine(controlledReactors.ReactivePowerFirst);
+                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+
+                        SetValueQ();
+                        Regime();
+
+                        Console.WriteLine("Параметры после изменения");
+                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[3];
+                        Console.WriteLine(controlledReactors.ReactivePowerSecond);
+                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+
+                        double b = controlledReactors.Effect();
+                        listNewQGen.Add(Math.Abs(b));
+                        Console.WriteLine(Math.Abs(b));
+                        break;
+
+                    case "3":
+                        Regime();
+                        Console.WriteLine("Параметры до изменения");
+                        switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[0];
+                        Console.WriteLine(switchedReactors.ConditionReactorFirst);
+                        switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
+                        SetReacCondition();
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[0];
+                        switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
+                        double c = switchedReactors.Effect();
+                        listNewQGen.Add(Math.Abs(c));
+                        Console.WriteLine(Math.Abs(c));
+                        break;
+
+                    case "4":
+                        Regime();
+                        //SetFix();
+                        Console.WriteLine("Параметры до изменения");
+                        switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[3];
+                        Console.WriteLine(switchedReactors.ConditionReactorFirst);
+                        switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
+                        SetReacCondition();
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[3];
+                        switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
+                        double d = switchedReactors.Effect();
+                        listNewQGen.Add(Math.Abs(d));
+                        Console.WriteLine(Math.Abs(d));
+                        break;
+
 
                 };
                     

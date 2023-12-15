@@ -60,7 +60,7 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         Console.WriteLine("УШР-500 ПС 500 кВ Томская");
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
-
+                                        rastr.Regime();
                                         rastr.SetNewValueGenerator("1");
          
 
@@ -99,9 +99,11 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         
                                         Console.WriteLine("СТК-1 ПС 500 кВ Заря");
-
-                                        ControlledReactors controlledReactors = new ControlledReactors();
-                                        
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+                                        rastr.Regime();
+                                        rastr.SetNewValueGenerator("2");
+                                        /*
+                                        ControlledReactors controlledReactors = new ControlledReactors();                                      
 
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
@@ -123,16 +125,17 @@ namespace DiplomVConsoleSmallScheme
                                         double a = controlledReactors.Effect();
 
                                         Console.WriteLine(Math.Abs(a));
-
+                                        */
                                         break;
                                     }
                                 case "3":
                                     {
                                         Console.WriteLine("ШР-500 ПС 500 кВ Томская");
-
-                                        SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        
-
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+                                        rastr.Regime();
+                                        rastr.SetNewValueGenerator("3");
+                                        /*
+                                        SwitchedReactors switchedReactors = new SwitchedReactors();                                      
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
                                         rastr.SetFix();
@@ -141,27 +144,25 @@ namespace DiplomVConsoleSmallScheme
                                         switchedReactors.ConditionReactorFirst = rastr.GetReacConditionFirst()[0];
                                         Console.WriteLine(switchedReactors.ConditionReactorFirst);
                                         switchedReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
-
                                         rastr.SetReacCondition();
                                         rastr.Regime();
-
                                         Console.WriteLine("Параметры после изменения");
                                         switchedReactors.ConditionReactorSecond = rastr.GetReacConditionSecond()[0];
                                         switchedReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
-
                                         double a = switchedReactors.Effect();
-
                                         Console.WriteLine(Math.Abs(a));
-
+                                        */
                                         break;
                                     }
                                 case "4":
                                     {
                                         Console.WriteLine("Р-532 ПС 500 кВ Заря");
+                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
+                                        rastr.Regime();
+                                        rastr.SetNewValueGenerator("4");
 
-                                        SwitchedReactors switchedReactors = new SwitchedReactors();
-                                        
-
+                                        /*
+                                        SwitchedReactors switchedReactors = new SwitchedReactors();                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
                                         rastr.Regime();
                                         rastr.SetFix();
@@ -170,18 +171,14 @@ namespace DiplomVConsoleSmallScheme
                                         switchedReactors.ConditionReactorFirst = rastr.GetReacConditionFirst()[3];
                                         Console.WriteLine(switchedReactors.ConditionReactorFirst);
                                         switchedReactors.VoltageFirst = rastr.GetVoltageYFirst()[0];
-
                                         rastr.SetReacCondition();
                                         rastr.Regime();
-
                                         Console.WriteLine("Параметры после изменения");
                                         switchedReactors.ConditionReactorSecond = rastr.GetReacConditionSecond()[3];
                                         switchedReactors.VoltageSecond = rastr.GetVoltageYSecond()[0];
-
                                         double a = switchedReactors.Effect();
-
                                         Console.WriteLine(Math.Abs(a));
-
+                                        */
                                         break;
                                     }
                             }
