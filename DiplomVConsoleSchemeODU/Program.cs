@@ -31,7 +31,6 @@ namespace DiplomVConsoleSmallScheme
 
             while (true)
             {
-                Console.WriteLine("");
                 Console.WriteLine("Выберите Контрольный пункт:");
                 Console.WriteLine("1 - ПС 500 кВ Ново-Анжерская");
                 Console.WriteLine("2 - Беловская ГРЭС");
@@ -43,11 +42,11 @@ namespace DiplomVConsoleSmallScheme
                     case "1":
                         {
                             Console.WriteLine("В качестве контрольного пункта вы выбрали " +
-                                "ПС 500 кВ Ново-Анжерская.Нажмте любую кнопку, чтобы перейти " +
+                                "ПС 500 кВ Ново-Анжерская.\nНажмте любую кнопку, чтобы перейти " +
                                 "к выбору Средства регулирования напряжения для расчёта " +
                                 "эффективности");
                             Console.ReadKey();
-                            Console.WriteLine("Выберите СРН");
+                            Console.WriteLine("Выберите СРН:");
                             Console.WriteLine($"1 - УШР-500 ПС 500 кВ Томская");
                             Console.WriteLine("2 - СТК-1 ПС 500 кВ Заря");
                             Console.WriteLine("3 - ШР-500 ПС 500 кВ Томская");
@@ -58,16 +57,14 @@ namespace DiplomVConsoleSmallScheme
                             {
                                 case "1":
                                     {
-                                        Console.WriteLine("УШР-500 ПС 500 кВ Томская");
-                                        rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
-                                        rastr.Regime();
+                                        
+                                        Console.WriteLine("Вы выбрали: УШР-500 ПС 500 кВ Томская");
+                                        
                                         rastr.SetNewValueGenerator("1");
          
 
                                         /*
                                         ControlledReactors controlledReactors = new ControlledReactors();
-
-
                                         List<int> List1 = new List<int> { 0, 1 };
                                        
                                         rastr.LoadFile(rastr.pathFile, rastr.pathShablon);
@@ -91,8 +88,8 @@ namespace DiplomVConsoleSmallScheme
                                         double a = controlledReactors.Effect();
 
                                         Console.WriteLine(a);
-                                        
                                         */
+                                        
                                         break;
                                     }
                                 case "2":

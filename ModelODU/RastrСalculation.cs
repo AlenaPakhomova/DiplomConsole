@@ -125,7 +125,7 @@ namespace ModelODU
                 }
 
             }
-
+            
             List<double> listNewQGen = new List<double>();
 
             Data data = new Data();
@@ -133,15 +133,19 @@ namespace ModelODU
             List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
             ControlledReactors controlledReactors = new ControlledReactors();
             SwitchedReactors switchedReactors = new SwitchedReactors();
-
+            
             foreach (var itemEnQGen in listEnQGen)
             {
+                Console.WriteLine($"\nПеречень параметров генераторов для текущего режима.\n");
+
                 List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  
                 QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1
                 && 
+
                 QGen.ParametersOfGenerator[itemEnQGen].TimeInterval <= time2).ToList();
 
-                
+                LoadFile(pathFile, pathShablon);
+
                 ITable Generator = (ITable)_rastr.Tables.Item("Generator");
                 ICol powerActiveLoad = (ICol)Generator.Cols.Item("P");
                 ICol NumberGen = (ICol)Generator.Cols.Item("Num");
@@ -155,33 +159,34 @@ namespace ModelODU
                     powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
                     Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
                     
-                   // listNewQGen.Add(Convert.ToDouble(powerActiveLoad.Z[n]));                   
-                    Console.WriteLine("+");
-
-
-                   
+                    listNewQGen.Add(Convert.ToDouble(powerActiveLoad.Z[n]));                   
+                    //Console.WriteLine("+");
                 }
+            
 
                 switch(consoleKey)
                 {
                     case "1":
-                         Regime();
-                        Console.WriteLine("Параметры до изменения");
+                        
+                        Regime();
+                        SetFix();
+                       // Console.WriteLine("Параметры до изменения");
+
                         controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
                         controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
-
                         SetValueQ();
                         Regime();
-
-
-                        Console.WriteLine("Параметры после изменения");
+                       // Console.WriteLine("Параметры после изменения");
                         controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
                         controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
 
                         double a = controlledReactors.Effect();
-                        listNewQGen.Add(Math.Abs(a));
-                        Console.WriteLine(a);
+
+                        //listNewQGen.Add(Math.Abs(a));
+
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
                         break;
+
 
                     case "2":                                           
                         Regime();
@@ -257,7 +262,7 @@ namespace ModelODU
 
             List<double> listNewQ1 = new List<double>();
 
-            List<int> listEnumerationQ1 = new List<int> { 0, 1, 2, 3 };
+            List<int> listEnumerationQ1 = new List<int> { 0, 1 };
             foreach (var itemEnQ1 in listEnumerationQ1)
             {
                 List<VoltageControlPoints> subListQ1 = listQ1.Where((Q1) =>
@@ -272,9 +277,10 @@ namespace ModelODU
                 {
                     Node.SetSel($"ny = {itemQ1.ParametersOfVoltageRegulationMeans[itemEnQ1].NumberOfVoltageRegulationMeans}");
                     int n = Node.FindNextSel[-1];
-                    Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+                    //Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
                     listNewQ1.Add(Convert.ToDouble(powerReacGen.Z[n]));
-                }              
+                }
+                
             }                                 
             return listNewQ1;        
         }
@@ -326,7 +332,7 @@ namespace ModelODU
 
             List<double> listNewQ2 = new List<double>();
 
-            List<int> listEnumerationQ2 = new List<int> { 0, 1, 2, 3 };
+            List<int> listEnumerationQ2 = new List<int> { 0, 1 };
             foreach (var itemEnQ2 in listEnumerationQ2)
             {
                 List<VoltageControlPoints> subListQ2 = listQ2.Where((Q1) =>
@@ -341,7 +347,7 @@ namespace ModelODU
                 {
                     Node.SetSel($"ny = {itemQ1.ParametersOfVoltageRegulationMeans[itemEnQ2].NumberOfVoltageRegulationMeans}");
                     int n = Node.FindNextSel[-1];
-                    Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+                   // Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
                     listNewQ2.Add(Convert.ToDouble(powerReacGen.Z[n]));
                 }
             }
@@ -371,7 +377,7 @@ namespace ModelODU
             {
                 Node.SetSel($"ny = {item.NumberOfControlPoints}");
                 int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
+               // Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
                 listNewU1.Add(Convert.ToDouble(voltageRas.Z[n]));
 
             }
@@ -379,6 +385,7 @@ namespace ModelODU
         }
         
         /// <summary>
+        /// 
         /// Получение напряжения в КП из Rastr после изменений
         /// </summary>
         /// <returns></returns>
@@ -398,7 +405,7 @@ namespace ModelODU
             {
                 Node.SetSel($"ny = {item.NumberOfControlPoints}");
                 int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
+               // Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
                 listNewU2.Add(Convert.ToDouble(voltageRas.Z[n]));
 
             }
@@ -440,7 +447,7 @@ namespace ModelODU
                 {
                     Node.SetSel($"ny = {itemC1.ParametersOfVoltageRegulationMeans[itemEnC1].NumberOfVoltageRegulationMeans}");
                     int n = Node.FindNextSel[-1];
-                    Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
+                    //Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
                     listNewC1.Add(Convert.ToInt32(conditionReactor.Z[n]));
                 }
             }           
