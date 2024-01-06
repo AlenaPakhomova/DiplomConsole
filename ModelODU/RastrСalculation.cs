@@ -48,7 +48,7 @@ namespace ModelODU
             _rastr.Load(RG_KOD.RG_REPL, pathFile, pathShablon);
         }
         
-
+        /*
         private static string dirName = "C:\\Users\\Алена\\Desktop\\Режимы для расчёта эффективности";      
         public List<double> CreateListRg(string consoleKey)      
         {
@@ -98,6 +98,7 @@ namespace ModelODU
 
 
         }
+        */
 
 
         private static string dirName1 = "C:\\Users\\Алена\\Desktop\\Режимы на диплом СМЗУ";
@@ -108,7 +109,7 @@ namespace ModelODU
         /// <param name="TypicalDay"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<double> CreateSet(string consoleKey)
+        public List<double> CreateSet(string consoleKey1, string consoleKey2, string consoleKey3)
         {
             List<string> listOfSlices = new List<string>();
             DateTime time;
@@ -203,26 +204,29 @@ namespace ModelODU
             {
                 ControlledReactors controlledReactors = new ControlledReactors();
                 _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
-                switch (consoleKey)
+                
+                switch (consoleKey1)
                 {
                     case "1":
                         Regime();
-                       // SetFix();
+                        Fix();                     
+                        Regime();
                         Console.WriteLine("Параметры до изменения");
 
-                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
-                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
-                        SetValueQ();
+                        controlledReactors.ReactivePowerFirst = GetQ(consoleKey2);
+                        controlledReactors.VoltageFirst = GetV(consoleKey3);
+                        SetQ(consoleKey2);
                         Regime();
                         Console.WriteLine("Параметры после изменения");
-                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
-                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+                        controlledReactors.ReactivePowerSecond = GetQ(consoleKey2);
+                        controlledReactors.VoltageSecond = GetV(consoleKey3);
 
                         double a = controlledReactors.Effect();
 
                         listNewEff.Add(Math.Abs(a));
 
                         Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
+                        
                         break;
 
 
@@ -231,7 +235,104 @@ namespace ModelODU
             }
             return listNewEff;
         }
-    
+
+        public void SetQ(string consoleKey)
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+
+            Node.SetSel($"ny = {consoleKey}");
+            int n = Node.FindNextSel[-1];
+            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
+            double a = Convert.ToDouble(powerReacGen.get_ZN(n));
+            double c = a + 10;
+            powerReacGen.set_ZN(n, c);
+            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
+        }
+
+        public double GetQ(string consoleKey)
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+
+            Node.SetSel($"ny = {consoleKey}");
+            int n = Node.FindNextSel[-1];
+            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+            double a = Convert.ToDouble(powerReacGen.get_ZN(n));
+            return a;
+        }
+        
+
+        public double GetV(string consoleKey)
+        {          
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol voltageRas = (ICol)Node.Cols.Item("vras");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+
+            Node.SetSel($"ny = {consoleKey}");
+            int n = Node.FindNextSel[-1];
+            Console.WriteLine($"Значение напряжения: {voltageRas.Z[n]}. Имя КП: {name.Z[n]}");
+            double a = Convert.ToDouble(voltageRas.get_ZN(n));
+            return a;
+        }
+
+        public void Fix()
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+            ICol tip = (ICol)Node.Cols.Item("tip");
+            ICol voltageZd = (ICol)Node.Cols.Item("vzd");
+            List<int> ListFix = new List<int>();
+
+            //лист со списком номеров узлов
+            for (int i = 0; i < Node.Count; i++)
+            {
+                Console.WriteLine(NumberNode.Z[i]);
+                ListFix.Add(Convert.ToInt32(NumberNode.Z[i]));                   
+            }
+
+            foreach (var item in ListFix)
+            {
+                Node.SetSel($"ny = {item}");
+                int n = Node.FindNextSel[-1];
+                //Console.WriteLine($"Имя КП: {name.Z[n]} тип узла {tip.Z[n]}");
+
+                if (Convert.ToInt32(tip.Z[n]) == 2)
+                {
+                    Console.WriteLine($"Имя КП: {name.Z[n]}, напряжение до изменения {voltageZd.Z[n]}");
+                    int voltage = 0;
+                    voltageZd.set_ZN(n, voltage);
+                    Console.WriteLine($"напряжение после изменения {voltageZd.Z[n]}");
+                }
+
+            }
+
+            /*
+            foreach (var item in ListFix)
+            {              
+                //Console.WriteLine(item);
+                Node.SetSel($"tip = {item}");
+                int n = Node.FindNextSel[-1];
+                Console.WriteLine($"Имя КП: {name.Z[n]}");
+            }
+            */
+            
+            /*
+            foreach (var item in ListFix)
+            {
+                int voltage = 0;
+                Node.SetSel($"ny = {item}");
+                int n = Node.FindNextSel[-1];
+                voltageZd.set_ZN(n, voltage);
+            }
+            */
+        }
 
         /// <summary>
         /// Фиксация всех средств регулирования напряжения
@@ -253,192 +354,194 @@ namespace ModelODU
                 voltageZd.set_ZN(n, voltage);
             }
         }
-      
-        public List<double> SetNewValueGenerator(string consoleKey)
-        {
-            
-            DateTime time1;
-            DateTime time2;
-            Console.WriteLine("Введите временной интервал.");
-            Console.WriteLine("Начало интервала (ГГ:ММ:ДД): ");
-            Regex regex = new Regex(@"\d+[:]\d+");
-            while (true)
-            {
+        
 
-                string timeConsole1 = Console.ReadLine();
+        /*
+          public List<double> SetNewValueGenerator(string consoleKey)
+          {
 
-                while (!regex.IsMatch(timeConsole1))
-                {
-                    Console.WriteLine("Не удалось распознать время" +
-                                       " отправления, введите снова!");
-                }
-                try
-                {
-                    // (год, месяц, день, час, минута, секунда)
-                    time1 = new DateTime(int.Parse(Regex.Split(timeConsole1, ":")[0]),
-                                        int.Parse(Regex.Split(timeConsole1, ":")[1]),
-                                        int.Parse(Regex.Split(timeConsole1, ":")[2]));
-                    break;
-                }
+              DateTime time1;
+              DateTime time2;
+              Console.WriteLine("Введите временной интервал.");
+              Console.WriteLine("Начало интервала (ГГ:ММ:ДД): ");
+              Regex regex = new Regex(@"\d+[:]\d+");
+              while (true)
+              {
 
-                // Ловит, если аргумент функции имеет слишком большое или
-                // слишком маленькое значение для данного типа
-                catch (ArgumentOutOfRangeException)
-                {
-                    Console.WriteLine("Ошибка! Введите корректное время.");
-                }
-            }
+                  string timeConsole1 = Console.ReadLine();
 
-            Console.WriteLine("Конец интервала (Г:М:Д): ");
-            while (true)
-            {
-                string timeConsole2 = Console.ReadLine();
-                while (!regex.IsMatch(timeConsole2))
-                {
-                    Console.WriteLine("Не удалось распознать время" +
-                                       " отправления, введите снова!");
-                }
-                try
-                {
-                    // (год, месяц, день, час, минута, секунда)
-                    time2 = new DateTime(int.Parse(Regex.Split(timeConsole2, ":")[0]),
-                                        int.Parse(Regex.Split(timeConsole2, ":")[1]),
-                                        int.Parse(Regex.Split(timeConsole2, ":")[2]));
-                    break;
-                }
+                  while (!regex.IsMatch(timeConsole1))
+                  {
+                      Console.WriteLine("Не удалось распознать время" +
+                                         " отправления, введите снова!");
+                  }
+                  try
+                  {
+                      // (год, месяц, день, час, минута, секунда)
+                      time1 = new DateTime(int.Parse(Regex.Split(timeConsole1, ":")[0]),
+                                          int.Parse(Regex.Split(timeConsole1, ":")[1]),
+                                          int.Parse(Regex.Split(timeConsole1, ":")[2]));
+                      break;
+                  }
 
-                // Ловит, если аргумент функции имеет слишком большое или
-                // слишком маленькое значение для данного типа
-                catch (ArgumentOutOfRangeException)
-                {
-                    Console.WriteLine("Ошибка! Введите корректное время.");
-                }
+                  // Ловит, если аргумент функции имеет слишком большое или
+                  // слишком маленькое значение для данного типа
+                  catch (ArgumentOutOfRangeException)
+                  {
+                      Console.WriteLine("Ошибка! Введите корректное время.");
+                  }
+              }
 
-            }
-            
-            List<double> listNewQGen = new List<double>();
+              Console.WriteLine("Конец интервала (Г:М:Д): ");
+              while (true)
+              {
+                  string timeConsole2 = Console.ReadLine();
+                  while (!regex.IsMatch(timeConsole2))
+                  {
+                      Console.WriteLine("Не удалось распознать время" +
+                                         " отправления, введите снова!");
+                  }
+                  try
+                  {
+                      // (год, месяц, день, час, минута, секунда)
+                      time2 = new DateTime(int.Parse(Regex.Split(timeConsole2, ":")[0]),
+                                          int.Parse(Regex.Split(timeConsole2, ":")[1]),
+                                          int.Parse(Regex.Split(timeConsole2, ":")[2]));
+                      break;
+                  }
 
-            Data data = new Data();
-            List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
-            List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
-            ControlledReactors controlledReactors = new ControlledReactors();
-            SwitchedReactors switchedReactors = new SwitchedReactors();
-            
-            foreach (var itemEnQGen in listEnQGen)
-            {
-                Console.WriteLine($"\nПеречень параметров генераторов для текущего режима.\n");
+                  // Ловит, если аргумент функции имеет слишком большое или
+                  // слишком маленькое значение для данного типа
+                  catch (ArgumentOutOfRangeException)
+                  {
+                      Console.WriteLine("Ошибка! Введите корректное время.");
+                  }
 
-                List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  
-                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1
-                && 
+              }
 
-                QGen.ParametersOfGenerator[itemEnQGen].TimeInterval <= time2).ToList();
+              List<double> listNewQGen = new List<double>();
 
-                LoadFile(pathFile, pathShablon);
+              Data data = new Data();
+              List<ParametersForChangingRegime> listQGen = data.ParametersForChangingRegimes;
+              List<int> listEnQGen = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
+              ControlledReactors controlledReactors = new ControlledReactors();
+              SwitchedReactors switchedReactors = new SwitchedReactors();
 
-                ITable Generator = (ITable)_rastr.Tables.Item("Generator");
-                ICol powerActiveLoad = (ICol)Generator.Cols.Item("P");
-                ICol NumberGen = (ICol)Generator.Cols.Item("Num");
-                ICol nameBus = (ICol)Generator.Cols.Item("Name");
+              foreach (var itemEnQGen in listEnQGen)
+              {
+                  Console.WriteLine($"\nПеречень параметров генераторов для текущего режима.\n");
 
-                foreach (var itemQGen in subLictQGen)
-                {
-                    Generator.SetSel($"Num = {itemQGen.ParametersOfGenerator[itemEnQGen].NumberOfGeneratorNode}");
-                    int n = Generator.FindNextSel[-1];
-                    Console.WriteLine($"Имя Генератора: {nameBus.Z[n]}");
-                    powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
-                    Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
-                    
-                    listNewQGen.Add(Convert.ToDouble(powerActiveLoad.Z[n]));                   
-                    //Console.WriteLine("+");
-                }
-            
+                  List<ParametersForChangingRegime> subLictQGen = listQGen.Where((QGen) =>  
+                  QGen.ParametersOfGenerator[itemEnQGen].TimeInterval >= time1
+                  && 
 
-                switch(consoleKey)
-                {
-                    case "1":
-                        
-                        Regime();
-                        SetFix();
-                       // Console.WriteLine("Параметры до изменения");
+                  QGen.ParametersOfGenerator[itemEnQGen].TimeInterval <= time2).ToList();
 
-                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
-                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
-                        SetValueQ();
-                        Regime();
-                       // Console.WriteLine("Параметры после изменения");
-                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
-                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+                  LoadFile(pathFile, pathShablon);
 
-                        double a = controlledReactors.Effect();
+                  ITable Generator = (ITable)_rastr.Tables.Item("Generator");
+                  ICol powerActiveLoad = (ICol)Generator.Cols.Item("P");
+                  ICol NumberGen = (ICol)Generator.Cols.Item("Num");
+                  ICol nameBus = (ICol)Generator.Cols.Item("Name");
 
-                        //listNewQGen.Add(Math.Abs(a));
+                  foreach (var itemQGen in subLictQGen)
+                  {
+                      Generator.SetSel($"Num = {itemQGen.ParametersOfGenerator[itemEnQGen].NumberOfGeneratorNode}");
+                      int n = Generator.FindNextSel[-1];
+                      Console.WriteLine($"Имя Генератора: {nameBus.Z[n]}");
+                      powerActiveLoad.set_ZN(n, itemQGen.ParametersOfGenerator[itemEnQGen].ActivePowerOfGenerator);
+                      Console.WriteLine($"Значение реактивной мощности: {powerActiveLoad.Z[n]}. Имя УШР: {nameBus.Z[n]}");
 
-                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
-                        break;
+                      listNewQGen.Add(Convert.ToDouble(powerActiveLoad.Z[n]));                   
+                      //Console.WriteLine("+");
+                  }
 
 
-                    case "2":                                           
-                        Regime();
-                        Console.WriteLine("Параметры до изменения");
-                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[3];
-                        Console.WriteLine(controlledReactors.ReactivePowerFirst);
-                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+                  switch(consoleKey)
+                  {
+                      case "1":
 
-                        SetValueQ();
-                        Regime();
+                          Regime();
+                          SetFix();
+                         // Console.WriteLine("Параметры до изменения");
 
-                        Console.WriteLine("Параметры после изменения");
-                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[3];
-                        Console.WriteLine(controlledReactors.ReactivePowerSecond);
-                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+                          controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
+                          controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+                          SetValueQ();
+                          Regime();
+                         // Console.WriteLine("Параметры после изменения");
+                          controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
+                          controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
 
-                        double b = controlledReactors.Effect();
-                        listNewQGen.Add(Math.Abs(b));
-                        Console.WriteLine(Math.Abs(b));
-                        break;
+                          double a = controlledReactors.Effect();
 
-                    case "3":
-                        Regime();
-                        Console.WriteLine("Параметры до изменения");
-                        switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[0];
-                        Console.WriteLine(switchedReactors.ConditionReactorFirst);
-                        switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
-                        SetReacCondition();
-                        Regime();
-                        Console.WriteLine("Параметры после изменения");
-                        switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[0];
-                        switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
-                        double c = switchedReactors.Effect();
-                        listNewQGen.Add(Math.Abs(c));
-                        Console.WriteLine(Math.Abs(c));
-                        break;
+                          //listNewQGen.Add(Math.Abs(a));
 
-                    case "4":
-                        Regime();
-                        //SetFix();
-                        Console.WriteLine("Параметры до изменения");
-                        switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[3];
-                        Console.WriteLine(switchedReactors.ConditionReactorFirst);
-                        switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
-                        SetReacCondition();
-                        Regime();
-                        Console.WriteLine("Параметры после изменения");
-                        switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[3];
-                        switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
-                        double d = switchedReactors.Effect();
-                        listNewQGen.Add(Math.Abs(d));
-                        Console.WriteLine(Math.Abs(d));
-                        break;
+                          Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
+                          break;
 
 
-                };
-                    
-                
-            }
-            return listNewQGen;         
-        }
+                      case "2":                                           
+                          Regime();
+                          Console.WriteLine("Параметры до изменения");
+                          controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[3];
+                          Console.WriteLine(controlledReactors.ReactivePowerFirst);
+                          controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
 
+                          SetValueQ();
+                          Regime();
+
+                          Console.WriteLine("Параметры после изменения");
+                          controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[3];
+                          Console.WriteLine(controlledReactors.ReactivePowerSecond);
+                          controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+
+                          double b = controlledReactors.Effect();
+                          listNewQGen.Add(Math.Abs(b));
+                          Console.WriteLine(Math.Abs(b));
+                          break;
+
+                      case "3":
+                          Regime();
+                          Console.WriteLine("Параметры до изменения");
+                          switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[0];
+                          Console.WriteLine(switchedReactors.ConditionReactorFirst);
+                          switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
+                          SetReacCondition();
+                          Regime();
+                          Console.WriteLine("Параметры после изменения");
+                          switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[0];
+                          switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
+                          double c = switchedReactors.Effect();
+                          listNewQGen.Add(Math.Abs(c));
+                          Console.WriteLine(Math.Abs(c));
+                          break;
+
+                      case "4":
+                          Regime();
+                          //SetFix();
+                          Console.WriteLine("Параметры до изменения");
+                          switchedReactors.ConditionReactorFirst = GetReacConditionFirst()[3];
+                          Console.WriteLine(switchedReactors.ConditionReactorFirst);
+                          switchedReactors.VoltageFirst = GetVoltageYFirst()[0];
+                          SetReacCondition();
+                          Regime();
+                          Console.WriteLine("Параметры после изменения");
+                          switchedReactors.ConditionReactorSecond = GetReacConditionSecond()[3];
+                          switchedReactors.VoltageSecond = GetVoltageYSecond()[0];
+                          double d = switchedReactors.Effect();
+                          listNewQGen.Add(Math.Abs(d));
+                          Console.WriteLine(Math.Abs(d));
+                          break;
+
+
+                  };
+
+
+              }
+              return listNewQGen;         
+          }
+        */
 
 
         /// <summary>
@@ -467,7 +570,7 @@ namespace ModelODU
                 {
                     Node.SetSel($"ny = {itemQ1.ParametersOfVoltageRegulationMeans[itemEnQ1].NumberOfVoltageRegulationMeans}");
                     int n = Node.FindNextSel[-1];
-                    //Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+                    // Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
                     listNewQ1.Add(Convert.ToDouble(powerReacGen.Z[n]));
                 }
                 
@@ -542,7 +645,6 @@ namespace ModelODU
                 }
             }
             return listNewQ2;
-
         }
 
 

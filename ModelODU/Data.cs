@@ -241,5 +241,14 @@ namespace ModelODU
         };
 
 
+        public List<int> NodesForFixingAll = new List<int>()
+        {
+            
+        };
+        
+        
+
+
+
     }
 }
