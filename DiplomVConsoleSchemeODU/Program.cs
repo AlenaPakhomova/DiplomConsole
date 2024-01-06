@@ -59,9 +59,13 @@ namespace DiplomVConsoleSmallScheme
                                     {
                                         
                                         Console.WriteLine("Вы выбрали: УШР-500 ПС 500 кВ Томская");
-                                        
-                                        rastr.SetNewValueGenerator("1");
-         
+
+                                        // rastr.SetNewValueGenerator("1");
+
+                                        //rastr.CreateListRg("1");
+                                        rastr.CreateSet("1");
+
+                                       // rastr.SetNewValueGenerator("1");
 
                                         /*
                                         ControlledReactors controlledReactors = new ControlledReactors();
@@ -89,7 +93,7 @@ namespace DiplomVConsoleSmallScheme
 
                                         Console.WriteLine(a);
                                         */
-                                        
+
                                         break;
                                     }
                                 case "2":

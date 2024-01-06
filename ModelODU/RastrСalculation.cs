@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.Metrics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,6 +37,7 @@ namespace ModelODU
         /// </summary>
         public static IRastr _rastr = new Rastr();
 
+
         /// <summary>
         /// Загрузка файла с данными 
         /// </summary>
@@ -41,7 +47,191 @@ namespace ModelODU
         {
             _rastr.Load(RG_KOD.RG_REPL, pathFile, pathShablon);
         }
+        
 
+        private static string dirName = "C:\\Users\\Алена\\Desktop\\Режимы для расчёта эффективности";      
+        public List<double> CreateListRg(string consoleKey)      
+        {
+            List<double> listNewEff = new List<double>();
+            List<string> listOfRg2 = new List<string>();
+            if (Directory.Exists(dirName))
+            {
+                //возвращает имена файлов, соответсвующим указанным критериям
+                string[] filesRg = Directory.GetFiles(dirName);
+                foreach (string pathRegime in filesRg)
+                {
+                    listOfRg2.Add(pathRegime);                  
+                }
+            }
+
+            foreach (var item in listOfRg2)
+            {
+                ControlledReactors controlledReactors = new ControlledReactors();
+                _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
+                switch (consoleKey)
+                {
+                    case "1":
+                        Regime();
+                        SetFix();
+                        Console.WriteLine("Параметры до изменения");
+
+                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
+                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+                        SetValueQ();
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
+                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+
+                        double a = controlledReactors.Effect();
+
+                        listNewEff.Add(Math.Abs(a));
+
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
+                        break;                    
+
+
+                };
+
+            }
+            return listNewEff;
+
+
+        }
+
+
+        private static string dirName1 = "C:\\Users\\Алена\\Desktop\\Режимы на диплом СМЗУ";
+
+        /// Подбор срезов ТМ по характерному дню
+        /// и количеству срезов
+        /// </summary>
+        /// <param name="TypicalDay"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public List<double> CreateSet(string consoleKey)
+        {
+            List<string> listOfSlices = new List<string>();
+            DateTime time;
+            Console.WriteLine("Введите дату ");
+            Regex regex = new Regex(@"\d+[_]\d+");
+            while (true)
+            {
+
+                string timeConsole1 = Console.ReadLine();
+
+                while (!regex.IsMatch(timeConsole1))
+                {
+                    Console.WriteLine("Не удалось распознать время" +
+                                       " отправления, введите снова!");
+                }
+                try
+                {
+                    // (год, месяц, день, час, минута, секунда)
+                    time = new DateTime(int.Parse(Regex.Split(timeConsole1, "_")[0]),
+                                        int.Parse(Regex.Split(timeConsole1, "_")[1]),
+                                        int.Parse(Regex.Split(timeConsole1, "_")[2]));
+                    break;
+                }
+
+                // Ловит, если аргумент функции имеет слишком большое или
+                // слишком маленькое значение для данного типа
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Ошибка! Введите корректное время.");
+                }
+            }
+
+            Console.WriteLine("Ввод количества срезов ");
+            int count = Convert.ToInt32(Console.ReadLine());
+
+            //содержание файла в директории
+            if (Directory.Exists(dirName1))
+            {
+                // имена подкаталогов в директории
+                string[] directoryes = Directory.GetDirectories(dirName1);
+
+                foreach (string directory in directoryes)
+                {
+                    Regex regex1 = new Regex(@"\d{4}_\d{2}_\d{2}");
+                    //вхождения регулярного выражения
+                    MatchCollection days = regex1.Matches(directory);
+                    if (days.Count > 0)
+                    {
+                        string dayMatch = days[0].ToString();
+
+                        dayMatch = dayMatch.Replace("_", "-");
+
+                        //преобразует в эквивалент времени 
+                        DateTime day = DateTime.ParseExact(dayMatch, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        //Console.WriteLine("\nДень:" + day.ToString("dd.MM.yyyy"));                     
+                        
+                        
+                        //Совпадение характерного дня и дня в архиве СМЗУ
+                        if (DateTime.Compare(time.Date, day.Date) == 0)
+                        {
+                            //Console.WriteLine(TypicalDay.Date.ToString("dd.MM.yyyy") + " = " + day.Date.ToString("dd.MM.yyyy"));
+
+                            string[] slices = Directory.GetDirectories(directory);
+                            // возвращает элементы из последовательности
+                            foreach (string slice in slices.Take(count))
+                            {
+                                //возвращает имена файлов, соответсвующим указанным критериям
+                                string[] files = Directory.GetFiles(slice);
+
+                                foreach (string pathRegime in files)
+                                {
+                                    // возвращает имя файла в указанной строки пути без расширения
+                                    string fileName = Path.GetFileNameWithoutExtension(pathRegime);
+                                    if (fileName == "roc_debug_after_OC")
+                                    {
+                                        Regex regex2 = new Regex(@"\d{2}_\d{2}_\d{2}");
+                                        MatchCollection docs = regex2.Matches(pathRegime);
+
+                                        //Console.WriteLine("Срез:" + docs[1]);
+                                        listOfSlices.Add(pathRegime);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+           // return listOfSlices;
+
+            List<double> listNewEff = new List<double>();
+            foreach (var item in listOfSlices)
+            {
+                ControlledReactors controlledReactors = new ControlledReactors();
+                _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
+                switch (consoleKey)
+                {
+                    case "1":
+                        Regime();
+                       // SetFix();
+                        Console.WriteLine("Параметры до изменения");
+
+                        controlledReactors.ReactivePowerFirst = GetReactivePowerFirst()[0];
+                        controlledReactors.VoltageFirst = GetVoltageYFirst()[0];
+                        SetValueQ();
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        controlledReactors.ReactivePowerSecond = GetPowerReacSecond()[0];
+                        controlledReactors.VoltageSecond = GetVoltageYSecond()[0];
+
+                        double a = controlledReactors.Effect();
+
+                        listNewEff.Add(Math.Abs(a));
+
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
+                        break;
+
+
+                };
+
+            }
+            return listNewEff;
+        }
+    
 
         /// <summary>
         /// Фиксация всех средств регулирования напряжения
@@ -454,7 +644,7 @@ namespace ModelODU
             return listNewC1;          
         }
 
-
+        
         /// <summary>
         /// Запись нового состояния шунтирующего реактора в Rastr 
         /// </summary>
@@ -490,7 +680,7 @@ namespace ModelODU
             }
 
         }
-
+        
         /// <summary>
         /// Получение нового состояния шунтирующего реактора из Rastr 
         /// </summary>
@@ -522,7 +712,7 @@ namespace ModelODU
             }
             return listNewC2;
         }
-        
+
 
         /*
         /// <summary>
@@ -605,5 +795,7 @@ namespace ModelODU
         }
         */
 
+
+        
     }
 }
