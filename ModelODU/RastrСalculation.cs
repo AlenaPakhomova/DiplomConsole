@@ -213,19 +213,20 @@ namespace ModelODU
                         Regime();
                         Console.WriteLine("Параметры до изменения");
 
+                        double a = Convert.ToDouble(GetV(consoleKey2));
                         controlledReactors.ReactivePowerFirst = GetQ(consoleKey2);
                         controlledReactors.VoltageFirst = GetV(consoleKey3);
-                        SetQ(consoleKey2);
+                        SetV(consoleKey2, a);
                         Regime();
                         Console.WriteLine("Параметры после изменения");
                         controlledReactors.ReactivePowerSecond = GetQ(consoleKey2);
                         controlledReactors.VoltageSecond = GetV(consoleKey3);
 
-                        double a = controlledReactors.Effect();
+                        double b = controlledReactors.Effect();
 
-                        listNewEff.Add(Math.Abs(a));
+                        listNewEff.Add(Math.Abs(b));
 
-                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(b)}\n");
                         
                         break;
 
@@ -236,20 +237,20 @@ namespace ModelODU
             return listNewEff;
         }
 
-        public void SetQ(string consoleKey)
+        public void SetV(string consoleKey, double a)
         {
             ITable Node = (ITable)_rastr.Tables.Item("node");
             ICol powerReacGen = (ICol)Node.Cols.Item("qg");
             ICol NumberNode = (ICol)Node.Cols.Item("ny");
             ICol name = (ICol)Node.Cols.Item("name");
+            ICol voltageRas = (ICol)Node.Cols.Item("vras");
+            ICol voltageZd = (ICol)Node.Cols.Item("vzd");
 
             Node.SetSel($"ny = {consoleKey}");
             int n = Node.FindNextSel[-1];
-            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
-            double a = Convert.ToDouble(powerReacGen.get_ZN(n));
-            double c = a + 10;
-            powerReacGen.set_ZN(n, c);
-            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя КП: {name.Z[n]}");
+            Console.WriteLine($"Значение напряжения: {voltageZd.Z[n]}. Имя КП: {name.Z[n]}");
+            voltageZd.set_ZN(n, a);
+            Console.WriteLine($"Значение напряжения: {voltageZd.Z[n]}. Имя КП: {name.Z[n]}");
         }
 
         public double GetQ(string consoleKey)
@@ -293,7 +294,7 @@ namespace ModelODU
             //лист со списком номеров узлов
             for (int i = 0; i < Node.Count; i++)
             {
-                Console.WriteLine(NumberNode.Z[i]);
+               // Console.WriteLine(NumberNode.Z[i]);
                 ListFix.Add(Convert.ToInt32(NumberNode.Z[i]));                   
             }
 
@@ -305,10 +306,10 @@ namespace ModelODU
 
                 if (Convert.ToInt32(tip.Z[n]) == 2)
                 {
-                    Console.WriteLine($"Имя КП: {name.Z[n]}, напряжение до изменения {voltageZd.Z[n]}");
+                   // Console.WriteLine($"Имя КП: {name.Z[n]}, напряжение до изменения {voltageZd.Z[n]}");
                     int voltage = 0;
                     voltageZd.set_ZN(n, voltage);
-                    Console.WriteLine($"напряжение после изменения {voltageZd.Z[n]}");
+                   // Console.WriteLine($"напряжение после изменения {voltageZd.Z[n]}");
                 }
 
             }
