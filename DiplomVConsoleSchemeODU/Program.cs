@@ -48,6 +48,7 @@ namespace DiplomVConsoleSmallScheme
                     break;
                 case "2":
                     Console.WriteLine("Вы выбрали: коммутируемый");
+                    rastr.CreateSet("2", consoleKey2, consoleKey1);
                     break;
                 case "3":
                     Console.WriteLine("Вы выбрали: генератор");

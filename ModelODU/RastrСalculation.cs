@@ -89,14 +89,9 @@ namespace ModelODU
 
                         Console.WriteLine($"\nЗначение эффективности для текущего режима: {a}\n");
                         break;                    
-
-
                 };
-
             }
             return listNewEff;
-
-
         }
         */
 
@@ -203,38 +198,139 @@ namespace ModelODU
             foreach (var item in listOfSlices)
             {
                 ControlledReactors controlledReactors = new ControlledReactors();
+                SwitchedReactors switchedReactors = new SwitchedReactors();
                 _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
                 
                 switch (consoleKey1)
                 {
                     case "1":
                         Regime();
-                        Fix();                     
+                        Fixation();
                         Regime();
                         Console.WriteLine("Параметры до изменения");
 
-                        double a = Convert.ToDouble(GetV(consoleKey2));
+                        double Vc = Convert.ToDouble(GetV(consoleKey2));
                         controlledReactors.ReactivePowerFirst = GetQ(consoleKey2);
                         controlledReactors.VoltageFirst = GetV(consoleKey3);
-                        SetV(consoleKey2, a);
+                        SetV(consoleKey2, Vc);
                         Regime();
                         Console.WriteLine("Параметры после изменения");
                         controlledReactors.ReactivePowerSecond = GetQ(consoleKey2);
                         controlledReactors.VoltageSecond = GetV(consoleKey3);
 
-                        double b = controlledReactors.Effect();
+                        double EffCR = controlledReactors.Effect();
 
-                        listNewEff.Add(Math.Abs(b));
+                        listNewEff.Add(Math.Abs(EffCR));
 
-                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(b)}\n");
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffCR)}\n");
                         
                         break;
 
+                    case "2":
+                        Regime();
+                        Fixation();
+                        Regime();
+                        Console.WriteLine("Параметры до изменения");
+                        double Usr = Convert.ToDouble(GetV(consoleKey2));
+                        switchedReactors.ConditionReactorFirst = GetConditionR(consoleKey2);
+                        int condition = Convert.ToInt32(GetConditionR(consoleKey2));
+                        switchedReactors.VoltageFirst = GetV(consoleKey3);
+                        SetConditionR(consoleKey2, condition);
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        switchedReactors.ConditionReactorSecond = GetConditionR(consoleKey2);
+                        switchedReactors.VoltageSecond = GetV(consoleKey3);
 
+                        double EffSR = switchedReactors.Effect();
+
+                        listNewEff.Add(Math.Abs(EffSR));
+
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffSR)}\n");
+
+                        break;    
                 };
 
             }
             return listNewEff;
+        }
+
+        public int GetConditionR(string consoleKey)
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol conditionReactor = (ICol)Node.Cols.Item("sta");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+
+            Node.SetSel($"ny = {consoleKey}");
+            int n = Node.FindNextSel[-1];
+            Console.WriteLine($"Статус работы: {conditionReactor.Z[n]}. Имя КП: {name.Z[n]}");
+            int a = Convert.ToInt32(conditionReactor.Z[n]);
+            return a;
+        }
+
+        public void SetConditionR(string consoleKey, int condition)
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ITable Vetv = (ITable)_rastr.Tables.Item("vetv");
+            ICol conditionReactorY = (ICol)Node.Cols.Item("sta");
+            ICol conditionReactorV = (ICol)Vetv.Cols.Item("sta");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol NumberNfirst = (ICol)Vetv.Cols.Item("ip");
+            ICol NumberNsecond = (ICol)Vetv.Cols.Item("iq");
+            ICol nameY = (ICol)Node.Cols.Item("name");
+            ICol nameV = (ICol)Vetv.Cols.Item("name");
+
+            if (condition == 1)
+            {
+                int reacConditionY = 0;
+                int reacConditionV = 0;
+                Node.SetSel($"ny = {consoleKey}");
+                int ny = Node.FindNextSel[-1];
+                Console.WriteLine($"Статус работы: {conditionReactorY.Z[ny]}. Имя КП: {nameY.Z[ny]}");
+                conditionReactorY.set_ZN(ny, reacConditionY);
+                Console.WriteLine($"Статус работы: {conditionReactorY.Z[ny]}. Имя КП: {nameY.Z[ny]}");
+
+                Vetv.SetSel($"ip = {consoleKey}");
+                int nvp = Vetv.FindNextSel[-1];
+                Console.WriteLine($"Статус работы начала ветви: {conditionReactorV.Z[nvp]}. Имя КП: {nameV.Z[nvp]}");
+                conditionReactorV.set_ZN(nvp, reacConditionV);
+                Console.WriteLine($"Статус работы начала ветви: {conditionReactorV.Z[nvp]}. Имя КП: {nameV.Z[nvp]}");
+
+
+                Vetv.SetSel($"iq = {consoleKey}");
+                int nvq = Vetv.FindNextSel[-1];              
+                Console.WriteLine($"Статус работы конца ветви: {conditionReactorV.Z[nvq]}. Имя КП: {nameV.Z[nvq]}");              
+                conditionReactorV.set_ZN(nvq, reacConditionV);
+                Console.WriteLine($"Статус работы конца ветви: {conditionReactorV.Z[nvq]}. Имя КП: {nameV.Z[nvq]}");
+                
+            }
+            else
+            {
+                int reacConditionY = 1;
+                int reacConditionV = 1;
+                Node.SetSel($"ny = {consoleKey}");
+                int ny = Node.FindNextSel[-1];
+                Console.WriteLine($"Статус работы: {conditionReactorY.Z[ny]}. Имя КП: {nameY.Z[ny]}");
+                conditionReactorY.set_ZN(ny, reacConditionY);
+                Console.WriteLine($"Статус работы: {conditionReactorY.Z[ny]}. Имя КП: {nameY.Z[ny]}");
+
+
+                Vetv.SetSel($"ny = {consoleKey}");
+                int nvp = Vetv.FindNextSel[-1];
+                Console.WriteLine($"Статус работы начала ветви: {conditionReactorV.Z[nvp]}. Имя КП: {nameV.Z[nvp]}");
+                conditionReactorV.set_ZN(nvp, reacConditionV);
+                Console.WriteLine($"Статус работы начала ветви: {conditionReactorV.Z[nvp]}. Имя КП: {nameV.Z[nvp]}");
+
+
+                Vetv.SetSel($"iq = {consoleKey}");
+                int nvq = Vetv.FindNextSel[-1];
+                Console.WriteLine($"Статус работы конца ветви: {conditionReactorV.Z[nvq]}. Имя КП: {nameV.Z[nvq]}");
+                conditionReactorV.set_ZN(nvq, reacConditionV);
+                Console.WriteLine($"Статус работы конца ветви: {conditionReactorV.Z[nvq]}. Имя КП: {nameV.Z[nvq]}");
+                
+            }
+
+
         }
 
         public void SetV(string consoleKey, double a)
@@ -249,7 +345,8 @@ namespace ModelODU
             Node.SetSel($"ny = {consoleKey}");
             int n = Node.FindNextSel[-1];
             Console.WriteLine($"Значение напряжения: {voltageZd.Z[n]}. Имя КП: {name.Z[n]}");
-            voltageZd.set_ZN(n, a);
+            voltageZd.set_ZN(n, a);          
+           
             Console.WriteLine($"Значение напряжения: {voltageZd.Z[n]}. Имя КП: {name.Z[n]}");
         }
 
@@ -282,7 +379,7 @@ namespace ModelODU
             return a;
         }
 
-        public void Fix()
+        public void Fixation()
         {
             ITable Node = (ITable)_rastr.Tables.Item("node");
             ICol NumberNode = (ICol)Node.Cols.Item("ny");
@@ -311,30 +408,15 @@ namespace ModelODU
                     voltageZd.set_ZN(n, voltage);
                    // Console.WriteLine($"напряжение после изменения {voltageZd.Z[n]}");
                 }
-
-            }
-
-            /*
-            foreach (var item in ListFix)
-            {              
-                //Console.WriteLine(item);
-                Node.SetSel($"tip = {item}");
-                int n = Node.FindNextSel[-1];
-                Console.WriteLine($"Имя КП: {name.Z[n]}");
-            }
-            */
-            
-            /*
-            foreach (var item in ListFix)
-            {
-                int voltage = 0;
-                Node.SetSel($"ny = {item}");
-                int n = Node.FindNextSel[-1];
-                voltageZd.set_ZN(n, voltage);
-            }
-            */
+            }          
         }
 
+       
+
+
+
+
+        /*
         /// <summary>
         /// Фиксация всех средств регулирования напряжения
         /// </summary>
@@ -355,7 +437,7 @@ namespace ModelODU
                 voltageZd.set_ZN(n, voltage);
             }
         }
-        
+        */
 
         /*
           public List<double> SetNewValueGenerator(string consoleKey)
@@ -714,7 +796,7 @@ namespace ModelODU
             _rastr.rgm("");
         }
 
-        
+        /*
         /// <summary>
         /// Получение начального состояния шунтирующего реактора из Rastr 
         /// </summary>
@@ -746,8 +828,9 @@ namespace ModelODU
             }           
             return listNewC1;          
         }
-
+        */
         
+        /*
         /// <summary>
         /// Запись нового состояния шунтирующего реактора в Rastr 
         /// </summary>
@@ -815,7 +898,7 @@ namespace ModelODU
             }
             return listNewC2;
         }
-
+        */
 
         /*
         /// <summary>
