@@ -107,8 +107,9 @@ namespace ModelODU
         public List<double> CreateSet(string consoleKey1, string consoleKey2, string consoleKey3)
         {
             List<string> listOfSlices = new List<string>();
-            DateTime time;
-            Console.WriteLine("Введите дату ");
+            DateTime time1;
+            DateTime time2;
+            Console.WriteLine("Введите начало интервала: ");
             Regex regex = new Regex(@"\d+[_]\d+");
             while (true)
             {
@@ -123,7 +124,7 @@ namespace ModelODU
                 try
                 {
                     // (год, месяц, день, час, минута, секунда)
-                    time = new DateTime(int.Parse(Regex.Split(timeConsole1, "_")[0]),
+                    time1 = new DateTime(int.Parse(Regex.Split(timeConsole1, "_")[0]),
                                         int.Parse(Regex.Split(timeConsole1, "_")[1]),
                                         int.Parse(Regex.Split(timeConsole1, "_")[2]));
                     break;
@@ -137,8 +138,175 @@ namespace ModelODU
                 }
             }
 
+            Console.WriteLine("Введите конец интервала: ");
+            while (true)
+            {
+                string timeConsole2 = Console.ReadLine();
+                while (!regex.IsMatch(timeConsole2))
+                {
+                    Console.WriteLine("Не удалось распознать время" +
+                                       " отправления, введите снова!");
+                }
+                try
+                {
+                    // (год, месяц, день, час, минута, секунда)
+                    time2 = new DateTime(int.Parse(Regex.Split(timeConsole2, "_")[0]),
+                                        int.Parse(Regex.Split(timeConsole2, "_")[1]),
+                                        int.Parse(Regex.Split(timeConsole2, "_")[2]));
+                    break;
+                }
+
+                // Ловит, если аргумент функции имеет слишком большое или
+                // слишком маленькое значение для данного типа
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Ошибка! Введите корректное время.");
+                }
+
+            }
+
+            List<DateTime> dates = Enumerable.Range(0, ((time2 - time1).Days) + 1)
+                .Select(n => time1.AddDays(n)).ToList();
+
             Console.WriteLine("Ввод количества срезов ");
             int count = Convert.ToInt32(Console.ReadLine());
+
+            List<double> listNewEff = new List<double>();
+
+            foreach (var data in dates)
+            {
+                Console.WriteLine(data.ToShortDateString());
+
+                //содержание файла в директории
+                if (Directory.Exists(dirName1))
+                {
+                    // имена подкаталогов в директории
+                    string[] directoryes = Directory.GetDirectories(dirName1);
+
+                    foreach (string directory in directoryes)
+                    {
+                        Regex regex1 = new Regex(@"\d{4}_\d{2}_\d{2}");
+                        //вхождения регулярного выражения
+                        MatchCollection days = regex1.Matches(directory);
+                        if (days.Count > 0)
+                        {
+                            string dayMatch = days[0].ToString();
+
+                            dayMatch = dayMatch.Replace("_", "-");
+
+                            //преобразует в эквивалент времени 
+                            DateTime day = DateTime.ParseExact(dayMatch, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                            //Console.WriteLine("\nДень:" + day.ToString("dd.MM.yyyy"));                     
+
+
+                            //Совпадение характерного дня и дня в архиве СМЗУ
+                            if (DateTime.Compare(data.Date, day.Date) == 0)
+                            {
+                                //Console.WriteLine(TypicalDay.Date.ToString("dd.MM.yyyy") + " = " + day.Date.ToString("dd.MM.yyyy"));
+
+                                string[] slices = Directory.GetDirectories(directory);
+                                // возвращает элементы из последовательности
+                                foreach (string slice in slices.Take(count))
+                                {
+                                    //возвращает имена файлов, соответсвующим указанным критериям
+                                    string[] files = Directory.GetFiles(slice);
+
+                                    foreach (string pathRegime in files)
+                                    {
+                                        // возвращает имя файла в указанной строки пути без расширения
+                                        string fileName = Path.GetFileNameWithoutExtension(pathRegime);
+                                        if (fileName == "roc_debug_after_OC")
+                                        {
+                                            Regex regex2 = new Regex(@"\d{2}_\d{2}_\d{2}");
+                                            MatchCollection docs = regex2.Matches(pathRegime);
+
+                                            //Console.WriteLine("Срез:" + docs[1]);
+                                            listOfSlices.Add(pathRegime);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // return listOfSlices;
+
+                //List<double> listNewEff = new List<double>();
+                foreach (var item in listOfSlices)
+                {
+                    ControlledReactors controlledReactors = new ControlledReactors();
+                    SwitchedReactors switchedReactors = new SwitchedReactors();
+                    Generators generators = new Generators();
+                    _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
+
+                    switch (consoleKey1)
+                    {
+                        case "1":
+                            Regime();
+                            Fixation();
+                            Regime();
+                            Console.WriteLine("Параметры до изменения");
+
+                            double Vc = Convert.ToDouble(GetV(consoleKey2));
+                            controlledReactors.ReactivePowerFirst = GetQ(consoleKey2);
+                            controlledReactors.VoltageFirst = GetV(consoleKey3);
+                            SetV(consoleKey2, Vc);
+                            Regime();
+                            Console.WriteLine("Параметры после изменения");
+                            controlledReactors.ReactivePowerSecond = GetQ(consoleKey2);
+                            controlledReactors.VoltageSecond = GetV(consoleKey3);
+                            double EffCR = controlledReactors.Effect();
+                            listNewEff.Add(Math.Abs(EffCR));
+                            Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffCR)}\n");
+                            break;
+
+                        case "2":
+                            Regime();
+                            Fixation();
+                            Regime();
+                            Console.WriteLine("Параметры до изменения");
+                            double Usr = Convert.ToDouble(GetV(consoleKey2));
+                            switchedReactors.ConditionReactorFirst = GetConditionR(consoleKey2);
+                            int condition = Convert.ToInt32(GetConditionR(consoleKey2));
+                            switchedReactors.VoltageFirst = GetV(consoleKey3);
+                            SetConditionR(consoleKey2, condition);
+                            Regime();
+                            Console.WriteLine("Параметры после изменения");
+                            switchedReactors.ConditionReactorSecond = GetConditionR(consoleKey2);
+                            switchedReactors.VoltageSecond = GetV(consoleKey3);
+                            double EffSR = switchedReactors.Effect();
+                            listNewEff.Add(Math.Abs(EffSR));
+                            Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffSR)}\n");
+                            break;
+
+                        case "3":
+                            Regime();
+                            Fixation();
+                            Regime();
+                            Console.WriteLine("Параметры до изменения");
+
+                            double Ug = Convert.ToDouble(GetV(consoleKey2));
+                            generators.ReactivePowerFirst = GetQGen(consoleKey2);
+                            generators.VoltageFirst = GetV(consoleKey3);
+                            SetV(consoleKey2, Ug);
+
+                            Regime();
+                            Console.WriteLine("Параметры после изменения");
+                            generators.ReactivePowerSecond = GetQGen(consoleKey2);
+                            generators.VoltageSecond = GetV(consoleKey3);
+
+                            double EffG = generators.Effect();
+                            listNewEff.Add(Math.Abs(EffG));
+                            Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffG)}\n");
+                            break;
+                    };
+                }              
+            }
+            return listNewEff;
+
+        }
+
+           /*
 
             //содержание файла в директории
             if (Directory.Exists(dirName1))
@@ -163,7 +331,7 @@ namespace ModelODU
                         
                         
                         //Совпадение характерного дня и дня в архиве СМЗУ
-                        if (DateTime.Compare(time.Date, day.Date) == 0)
+                        if (DateTime.Compare(time1.Date, day.Date) == 0)
                         {
                             //Console.WriteLine(TypicalDay.Date.ToString("dd.MM.yyyy") + " = " + day.Date.ToString("dd.MM.yyyy"));
 
@@ -266,6 +434,7 @@ namespace ModelODU
             }
             return listNewEff;
         }
+           */
 
         public double GetQGen(string consoleKey)
         {
