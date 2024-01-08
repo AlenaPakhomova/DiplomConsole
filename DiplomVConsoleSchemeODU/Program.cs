@@ -52,6 +52,7 @@ namespace DiplomVConsoleSmallScheme
                     break;
                 case "3":
                     Console.WriteLine("Вы выбрали: генератор");
+                    rastr.CreateSet("3", consoleKey2, consoleKey1);
                     break;
                 default:
                     break;

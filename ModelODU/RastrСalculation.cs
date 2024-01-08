@@ -199,6 +199,7 @@ namespace ModelODU
             {
                 ControlledReactors controlledReactors = new ControlledReactors();
                 SwitchedReactors switchedReactors = new SwitchedReactors();
+                Generators generators = new Generators();
                 _rastr.Load(RG_KOD.RG_REPL, item, pathShablon);
                 
                 switch (consoleKey1)
@@ -217,13 +218,9 @@ namespace ModelODU
                         Console.WriteLine("Параметры после изменения");
                         controlledReactors.ReactivePowerSecond = GetQ(consoleKey2);
                         controlledReactors.VoltageSecond = GetV(consoleKey3);
-
                         double EffCR = controlledReactors.Effect();
-
                         listNewEff.Add(Math.Abs(EffCR));
-
-                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffCR)}\n");
-                        
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffCR)}\n");                      
                         break;
 
                     case "2":
@@ -240,18 +237,51 @@ namespace ModelODU
                         Console.WriteLine("Параметры после изменения");
                         switchedReactors.ConditionReactorSecond = GetConditionR(consoleKey2);
                         switchedReactors.VoltageSecond = GetV(consoleKey3);
-
                         double EffSR = switchedReactors.Effect();
-
                         listNewEff.Add(Math.Abs(EffSR));
-
                         Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffSR)}\n");
+                        break;
 
-                        break;    
+                    case "3":
+                        Regime();
+                        Fixation();
+                        Regime();
+                        Console.WriteLine("Параметры до изменения");
+
+                        double Ug = Convert.ToDouble(GetV(consoleKey2));
+                        generators.ReactivePowerFirst = GetQGen(consoleKey2);
+                        generators.VoltageFirst = GetV(consoleKey3);
+                        SetV(consoleKey2, Ug);
+
+                        Regime();
+                        Console.WriteLine("Параметры после изменения");
+                        generators.ReactivePowerSecond = GetQGen(consoleKey2);
+                        generators.VoltageSecond = GetV(consoleKey3);
+
+                        double EffG = generators.Effect();
+                        listNewEff.Add(Math.Abs(EffG));
+                        Console.WriteLine($"\nЗначение эффективности для текущего режима: {Math.Abs(EffG)}\n");
+                        break;
                 };
-
             }
             return listNewEff;
+        }
+
+        public double GetQGen(string consoleKey)
+        {
+            ITable Node = (ITable)_rastr.Tables.Item("node");
+            ICol activePowerGen = (ICol)Node.Cols.Item("pg");
+            ICol powerReacGen = (ICol)Node.Cols.Item("qg");
+            ICol NumberNode = (ICol)Node.Cols.Item("ny");
+            ICol name = (ICol)Node.Cols.Item("name");
+
+            Node.SetSel($"ny = {consoleKey}");
+            int n = Node.FindNextSel[-1];
+            Console.WriteLine($"Значение реактивной мощности: {powerReacGen.Z[n]}. Имя УШР: {name.Z[n]}");
+            Console.WriteLine($"Значение активной мощности: {activePowerGen.Z[n]}. Имя УШР: {name.Z[n]}");
+            double a = Convert.ToDouble(powerReacGen.Z[n]);
+
+            return a;
         }
 
         public int GetConditionR(string consoleKey)
@@ -267,7 +297,7 @@ namespace ModelODU
             int a = Convert.ToInt32(conditionReactor.Z[n]);
             return a;
         }
-
+        
         public void SetConditionR(string consoleKey, int condition)
         {
             ITable Node = (ITable)_rastr.Tables.Item("node");
@@ -329,9 +359,9 @@ namespace ModelODU
                 Console.WriteLine($"Статус работы конца ветви: {conditionReactorV.Z[nvq]}. Имя КП: {nameV.Z[nvq]}");
                 
             }
-
-
         }
+
+        
 
         public void SetV(string consoleKey, double a)
         {
@@ -411,7 +441,7 @@ namespace ModelODU
             }          
         }
 
-       
+
 
 
 
@@ -626,7 +656,7 @@ namespace ModelODU
           }
         */
 
-
+        /*
         /// <summary>
         /// Получение реактивной мощности реактора до изменений из Rastr
         /// </summary>
@@ -731,7 +761,7 @@ namespace ModelODU
         }
 
 
-
+        
         /// <summary>
         /// Получение напряжения в КП до изменений из Rastr 
         /// </summary>
@@ -787,7 +817,7 @@ namespace ModelODU
             return listNewU2;
         }
         
-
+        */
         /// <summary>
         /// Расчёт режима
         /// </summary>
@@ -979,8 +1009,8 @@ namespace ModelODU
             }
             return listNew;
         }
+        
         */
-
 
         
     }
