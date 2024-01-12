@@ -21,13 +21,17 @@ namespace DiplomVConsoleSmallScheme
         /// <param name="args">Параметры</param>
         public static void Main(string[] args)
         {
+            RastrСalculation rastr = new RastrСalculation();
 
+            //rastr.Chart_Click();
+           // rastr.Chart();
+
+            
             Console.WriteLine("Добро пожаловать в программу " +
                 "вычисления эффективности СРН!\n" +
                 "Нажмите любую кнопку, чтобы начать...");
             Console.ReadKey();
 
-            RastrСalculation rastr = new RastrСalculation();
 
 
             Console.WriteLine("Введите номер узла Контрольного пункта: ");

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,6 +22,111 @@ namespace ModelODU
     /// </summary>
     public class RastrСalculation
     {
+        /*
+        public void Chart_Click()
+        {
+            List<int> number = new List<int> { 1, 2, 3, 2, 4, 1, 5, 4, 3 };
+
+            Dictionary<int, int> Number = new Dictionary<int, int>();
+
+            // Подсчитаем количество повторяющихся чисел в листе
+            foreach (int item in number)
+            {
+                if (Number.ContainsKey(item))
+                {
+                    Number[item]++;
+                }
+                else
+                {
+                    Number[item] = 1;
+                }
+
+            }
+
+            // Создаем двумерный массив
+            int[,] array = new int[Number.Count, 2];
+            int a = 0;
+            foreach (KeyValuePair<int, int> par in Number)
+            {
+                // Уникальное значение
+                array[a, 0] = par.Key;
+
+                // Считать
+                array[a, 1] = par.Value;
+
+                a++;
+            }
+
+            // Распечатываем массив
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    Console.Write(array[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+        */
+        /*
+        public void Chart()
+        {
+            List<double> number = new List<double> { 1.333, 2.5, 1.333, 3.75, 2.5, 1.333, 4.25, 4.25 };
+
+            var duplicateNumbers = number.GroupBy(x => x).Where(g => g.Count() > 1).
+                Select(g => new { Number = g.Key, Count = g.Count() }).ToList();
+
+            // Создаем двумерный массив
+            object[,] array = new object[duplicateNumbers.Count, 2];
+            double[] arrayN = new double[duplicateNumbers.Count];
+            int[] arrayC = new int[duplicateNumbers.Count];
+            int a = 0;
+            // Распечатываем массив
+            for (int i = 0; i < duplicateNumbers.Count; i++)
+            {
+                arrayN[i] = duplicateNumbers[i].Number;
+                arrayC[i] = duplicateNumbers[i].Count;               
+            }
+
+            /*
+            Console.WriteLine($"Повторяющиеся числа:");
+            for (int i = 0; i < duplicateNumbers.Count; i++)
+            {
+                Console.WriteLine($"Число: {array[i, 0]}, Count: {array[i, 1]}");
+            }
+
+            foreach (var item in arrayN)
+            {
+                Console.WriteLine($"Число: {item}");
+            }
+
+            foreach (var item1 in arrayC)
+            {
+                Console.WriteLine($"Count: {item1}");
+            }
+
+
+            /*
+            // Создаем двумерный массив
+            object[,] array = new object[duplicateNumbers.Count, 2];
+            int a = 0;
+            // Распечатываем массив
+            for (int i = 0; i < duplicateNumbers.Count; i++)
+            {
+                array[i, 0] = duplicateNumbers[i].Number;
+                array[i, 1] = duplicateNumbers[i].Count;
+            }
+
+            
+            Console.WriteLine($"Повторяющиеся числа:");
+            for (int i = 0; i < duplicateNumbers.Count; i++)
+            {
+                Console.WriteLine($"Число: {array[i, 0]}, Count: {array[i, 1]}");
+            }
+            */
+        
+
+
         /// <summary>
         /// Загрузка файла режима RastrWin3 для расчётов
         /// </summary>
@@ -48,8 +154,10 @@ namespace ModelODU
             _rastr.Load(RG_KOD.RG_REPL, pathFile, pathShablon);
         }
         
-        /*
+        
         private static string dirName = "C:\\Users\\Алена\\Desktop\\Режимы для расчёта эффективности";      
+
+        /*
         public List<double> CreateListRg(string consoleKey)      
         {
             List<double> listNewEff = new List<double>();
@@ -104,7 +212,7 @@ namespace ModelODU
         /// <param name="TypicalDay"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<double> CreateSet(string consoleKey1, string consoleKey2, string consoleKey3)
+        public void CreateSet(string consoleKey1, string consoleKey2, string consoleKey3)
         {
             List<string> listOfSlices = new List<string>();
             DateTime time1;
@@ -302,9 +410,37 @@ namespace ModelODU
                     };
                 }              
             }
-            return listNewEff;
+            //return listNewEff;
+
+            var duplicateNumbers = listNewEff.GroupBy(x => x).Where(g => g.Count() > 1).
+                 Select(g => new { Number = g.Key, Count = g.Count() }).ToList();
+
+            // Создаем двумерный массив
+            object[,] array = new object[duplicateNumbers.Count, 2];
+            double[] arrayN = new double[duplicateNumbers.Count];
+            int[] arrayC = new int[duplicateNumbers.Count];
+            int a = 0;
+            // Распечатываем массив
+            for (int i = 0; i < duplicateNumbers.Count; i++)
+            {
+                arrayN[i] = duplicateNumbers[i].Number;
+                arrayC[i] = duplicateNumbers[i].Count;
+            }
+
+            foreach (var item in arrayN)
+            {
+                Console.WriteLine(item);
+            }
+
+            foreach (var item1 in arrayC)
+            {
+                Console.WriteLine(item1);
+            }
 
         }
+
+
+
 
            /*
 
